@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+rocket_cors = "0.5.1"
 markdown-it = "0.4.0"
 rocket = { version = "0.5.0-rc.2" }
 html_editor = "0.5.2"

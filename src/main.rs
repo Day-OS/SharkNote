@@ -1,13 +1,13 @@
 //http://127.0.0.1:8000/p/TH/blocodenotasfvcm
-
+//mod cors;
+mod table_of_contents;
 #[macro_use] extern crate rocket;
 use rocket::fs::NamedFile;
 use rocket::response::content::{RawHtml};
 use std::borrow::BorrowMut;
 use std::fs;
 use std::str;
-use html_editor::operation::*;
-use html_editor::{parse, Node};
+use html_editor::{operation::*, Node};
 static DEFAULT_DIR: &'static str = "/home/ubuntu/.daytheipc-com/";
 
 #[get("/<page_name>/<content_dir>/<content_name>")]
@@ -36,8 +36,6 @@ fn get_page(page_name: &str, document: &str) -> RawHtml<String> {
     markdown_it::plugins::cmark::add(md_parser);
     markdown_it::plugins::extra::add(md_parser);
     markdown_it::plugins::html::add(md_parser);
-    
-    ////table_of_contents::add(md_parser);
 
 
     //GETS INDEX.HTML
@@ -64,21 +62,11 @@ fn get_page(page_name: &str, document: &str) -> RawHtml<String> {
 
 
     //TABLE OF CONTENTS
-    let h1 = md_vector.query_all(&Selector::from("h1"));
-    println!("{}", md_vector.html());
-    println!("QUANTIDADE: {}", h1.len());
-    let mut table_of_contents: Vec<Node> = vec![Node::new_element("div", vec![("id", "toc")], vec![])];
-    for title in h1.into_iter() {
-        let href = Node::new_element("a", vec![("href", "&a.1")], vec![Node::Text(title.name.clone())]);
-        let name = Node::new_element("a", vec![("name", "&a.1")], vec![Node::Text(title.name)]);
+    //let mut toc: Vec<Node> = vec![Node::new_element("div", vec![("id", "toc")], vec![])];
+    
+    table_of_contents::add_table(md_vector.borrow_mut());
 
-        table_of_contents.insert_to(&Selector::from("div"), href);
-
-        md_vector.insert_to(&Selector::from("h1"), name);
-        //dom.insert_to(&body_selec, elementeru);
-    }
-
-    dom.insert_to(&body_selec, Node::new_element("", vec![], table_of_contents));
+    //dom.insert_to(&body_selec, Node::new_element("", vec![], toc));
     dom.insert_to(&body_selec, Node::new_element("div", vec![("id","md")], md_vector));
     dom.insert_to(&body_selec, Node::new_element("footer", vec![], vec![Node::Text(r#"2022 DaytheIPC<sup>NOT A TM</sup> - <a href="https://srv.daytheipc.com/wtfpl.txt">WTFPL</a>"#.to_string())]));
     let final_html = dom.html();
@@ -90,5 +78,5 @@ fn get_page(page_name: &str, document: &str) -> RawHtml<String> {
 fn rocket() -> _ {
     let figment = rocket::Config::figment()
         .merge(("port", 8000));
-    rocket::custom(figment).mount("/", routes![get_page, get_content])
+    rocket::custom(figment).mount("/", routes![get_page, get_content])//.attach(cors.)
 }
