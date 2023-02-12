@@ -62,12 +62,12 @@ fn get_page(page_name: &str, document: &str) -> RawHtml<String> {
 
 
     //TABLE OF CONTENTS
-    //let mut toc: Vec<Node> = vec![Node::new_element("div", vec![("id", "toc")], vec![])];
+    let mut toc: Vec<Node> = vec![];
     
-    table_of_contents::add_table(md_vector.borrow_mut());
-
-    //dom.insert_to(&body_selec, Node::new_element("", vec![], toc));
-    dom.insert_to(&body_selec, Node::new_element("div", vec![("id","md")], md_vector));
+    table_of_contents::add_table(md_vector.borrow_mut(), toc.borrow_mut());
+    
+    dom.insert_to(&body_selec, Node::new_element("div", vec![("id", "toc")], toc));
+    dom.insert_to(&body_selec, Node::new_element("div", vec![("class","md")], md_vector));
     dom.insert_to(&body_selec, Node::new_element("footer", vec![], vec![Node::Text(r#"2022 DaytheIPC<sup>NOT A TM</sup> - <a href="https://srv.daytheipc.com/wtfpl.txt">WTFPL</a>"#.to_string())]));
     let final_html = dom.html();
 
