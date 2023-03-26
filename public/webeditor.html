@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title></title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <style type="text/css" media="screen">
+        #editor { 
+            position: absolute;
+        width: 500px;
+        height: 400px;
+        }
+    </style>
+</head>
+<body>
+<div id="original-document-content"> a</div>
+
+
+<div id="editor"># a 
+    function foo(items) {
+    var x = "All this is syntax highlighted";
+    return x;
+}</div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.16.0/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdn.jsdelivr.net/npm/ace-builds@1.16.0/src-min/mode-markdown.js"></script>
+<script>
+    //https://ace.c9.io/#nav=howto
+    var editor = ace.edit("editor");
+    var md = ace.createEditSession("some js code");
+    console.log(editor.getValue())
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/markdown");
+</script>
+</body>
+</html>

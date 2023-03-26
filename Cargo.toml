@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 rocket_cors = "0.5.1"
 markdown-it = "0.4.0"
-rocket = { version = "0.5.0-rc.2" }
+rocket = "0.5.0-rc.2"
 html_editor = "0.5.2"
 unidecode = "0.3.0"
+rusqlite = { version = "0.28.0", features = ["bundled"] }

@@ -1,14 +1,24 @@
 //http://127.0.0.1:8000/p/TH/blocodenotasfvcm
 //mod cors;
 mod table_of_contents;
+mod database_handler;
+mod webeditor;
 #[macro_use] extern crate rocket;
 use rocket::fs::NamedFile;
 use rocket::response::content::{RawHtml};
+use rocket::config::{LogLevel};
 use std::borrow::BorrowMut;
 use std::fs;
 use std::str;
 use html_editor::{operation::*, Node};
 static DEFAULT_DIR: &'static str = "/home/ubuntu/.daytheipc-com/";
+
+
+
+#[get("/<page_name>/<document>/e")]
+async fn get_editor(page_name: &str, document: String) -> RawHtml<String>{
+    webeditor::get_editor(DEFAULT_DIR, page_name, document)
+}
 
 #[get("/<page_name>/<content_dir>/<content_name>")]
 async fn get_content(page_name: &str, content_dir: String, content_name: &str) -> Option<NamedFile>{
@@ -76,7 +86,10 @@ fn get_page(page_name: &str, document: &str) -> RawHtml<String> {
 
 #[launch]
 fn rocket() -> _ {
+    //database_handler::create_table_if_not_exists("TH.db");
+
     let figment = rocket::Config::figment()
-        .merge(("port", 8000));
-    rocket::custom(figment).mount("/", routes![get_page, get_content])//.attach(cors.)
+        .merge(("port", 8000))
+        .merge(("log_level", LogLevel::Critical));
+    rocket::custom(figment).mount("/", routes![get_page, get_content, get_editor])//.attach(cors.)
 }
