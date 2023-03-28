@@ -1,0 +1,10 @@
+
+                "CREATE TABLE pages (
+                        page_name TEXT PRIMARY KEY,
+                        page_configuration TEXT NOT NULL,
+                        data BLOB);
+                    CREATE TABLE files (
+                        file_name TEXT PRIMARY KEY,
+                        page_name TEXT NOT NULL,
+                        data BLOB NOT NULL;
+                    data BLOB)"

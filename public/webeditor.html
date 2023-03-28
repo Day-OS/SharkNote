@@ -3,11 +3,8 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title></title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
+    <title>Editor!</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>    
     <style type="text/css" media="screen">
         #editor { 
             position: absolute;
@@ -17,6 +14,22 @@
     </style>
 </head>
 <body>
+    
+<form action="/p/editor/signup" method="post">
+        <div class="mb-3 row">
+            <label for="email" class="col-sm-2 col-form-label">Email</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" name="email" required>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="password" class="col-sm-2 col-form-label">Password </label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" name="password" required>
+            </div>
+        </div>
+        <button class="btn btn-primary" type="submit">Log in</button>
+</form>
 <div id="original-document-content"> a</div>
 
 
@@ -29,12 +42,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.16.0/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.16.0/src-min/mode-markdown.js"></script>
 <script>
+    var pagename = window.location.href + (window.location.href.endsWith("/")? "":"/");
+    //https://moon.daytheipc.com/p/editor/signup?email=Dani%40asd.c&password=d
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "POST", "/p/editor/signup", false ); // false for synchronous request
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xmlHttp.send( "email=Dani%40asd.c&password=d" );
+    
+
+
+
     //https://ace.c9.io/#nav=howto
     var editor = ace.edit("editor");
     var md = ace.createEditSession("some js code");
-    console.log(editor.getValue())
+    //console.log(editor.getValue())
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/markdown");
 </script>
+
+
+
+
+
 </body>
 </html>
