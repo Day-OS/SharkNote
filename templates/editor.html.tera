@@ -1,0 +1,41 @@
+{% extends "base" %}
+{% block body %}
+<style>#editor{height: 1000px;}</style>
+    <div id="editor"># a 
+    function foo(items) {
+    var x = "All this is syntax highlighted";
+    return x;
+    }</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.16.0/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.16.0/src-min/mode-markdown.js"></script>
+    <script>
+    var pagename = window.location.href + (window.location.href.endsWith("/")? "":"/");
+    //https://moon.daytheipc.com/p/editor/signup?email=Dani%40asd.c&password=d
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "POST", "/p/login", false ); // false for synchronous request
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xmlHttp.addEventListener("load", function() {
+        // if the request succeeded
+        if (xmlHttp.status >= 200 && xmlHttp.status < 300) {
+            // print the response to the request
+            console.log(xmlHttp.response);
+        }
+    })
+    //xmlHttp.send( "username=Dani%40asd.c&password=d" );
+
+
+
+
+    //https://ace.c9.io/#nav=howto
+    var editor = ace.edit("editor");
+    var md = ace.createEditSession("some js code");
+    //console.log(editor.getValue())
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/markdown");
+    </script>
+
+
+
+
+{% endblock body %}

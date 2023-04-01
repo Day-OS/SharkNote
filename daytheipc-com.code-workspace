@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../.daytheipc-com"
+		},
+		{
+			"path": "../../daytheipc-com"
 		}
 	],
 	"settings": {}

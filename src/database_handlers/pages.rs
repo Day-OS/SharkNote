@@ -1,7 +1,11 @@
 use rusqlite::Connection;
+use crate::db_utils;
 
-#[path ="database_handler.rs"]
-mod database_handler;
+#[derive(Debug)]
+struct PageOwners {
+    page_owner_id: u16,
+}
+
 
 #[derive(Debug)]
 struct Pages {
@@ -19,7 +23,11 @@ struct Files {
 }
 
 pub fn get_database(page_name: &str) -> Connection{
-    database_handler::get_database(page_name, "CREATE TABLE pages (
+    db_utils::get_database(page_name, "
+    CREATE TABLE page_owners (
+        page_owner_id INTEGER PRIMARY KEY
+    );
+    CREATE TABLE pages (
         page_name TEXT PRIMARY KEY,
         page_configuration TEXT NOT NULL,
         data BLOB);
@@ -27,7 +35,7 @@ pub fn get_database(page_name: &str) -> Connection{
         file_name TEXT PRIMARY KEY,
         page_name TEXT NOT NULL,
         data BLOB NOT NULL;
-    data BLOB)")
+    )")
 }
 
 /*

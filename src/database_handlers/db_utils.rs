@@ -1,19 +1,23 @@
-use rusqlite::{Connection, Result, Params, params};
+use rusqlite::{Connection, params};
 use std::fs::File;
-use std::io::prelude::*;
-use std::error::Error;
+use crate::config_file;
+
 //https://github.com/ProseMirror/prosemirror
 //https://docs.rs/rusqlite/latest/rusqlite/index.html
 //https://docs.rs/libaes/latest/libaes/struct.Cipher.html#
 
+#[repr(u8)]
+pub enum DBErrors {
 
-static DEFAULT_DIR: &'static str = "/home/ubuntu/.daytheipc-com/db/";
-
-
+    CantDeleteUser(String, rusqlite::Error),
+    GenericNotFound,
+    ProgramError(String),
+    SqliteError(rusqlite::Error)
+}
 
 
 pub fn get_db_file_dir(db_file_name: &str) -> String{
-    let mut dir: String = DEFAULT_DIR.to_string();
+    let mut dir: String = config_file::get_dirs_database_location();
     dir.push_str(db_file_name.clone());
     dir.push_str(".db");
     dir

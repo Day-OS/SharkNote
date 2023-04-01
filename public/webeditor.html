@@ -4,26 +4,19 @@
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Editor!</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>    
-    <style type="text/css" media="screen">
-        #editor { 
-            position: absolute;
-        width: 500px;
-        height: 400px;
-        }
-    </style>
+    <meta name='viewport' content='width=device-width, initial-scale=1'> 
 </head>
 <body>
     
-<form action="/p/editor/signup" method="post">
+<form action="/p/login" method="post">
         <div class="mb-3 row">
-            <label for="email" class="col-sm-2 col-form-label">Email</label>
+            <label for="page_owner_id" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-10">
-                <input type="email" class="form-control" name="email" required>
+                <input type="text" class="form-control" name="page_owner_id" required>
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="password" class="col-sm-2 col-form-label">Password </label>
+            <label for="password" class="col-sm-2 col-form-label">Password</label>
             <div class="col-sm-10">
                 <input type="password" class="form-control" name="password" required>
             </div>
@@ -45,9 +38,16 @@
     var pagename = window.location.href + (window.location.href.endsWith("/")? "":"/");
     //https://moon.daytheipc.com/p/editor/signup?email=Dani%40asd.c&password=d
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "POST", "/p/editor/signup", false ); // false for synchronous request
+    xmlHttp.open( "POST", "/p/login", false ); // false for synchronous request
     xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xmlHttp.send( "email=Dani%40asd.c&password=d" );
+    xmlHttp.addEventListener("load", function() {
+        // if the request succeeded
+        if (xmlHttp.status >= 200 && xmlHttp.status < 300) {
+            // print the response to the request
+            console.log(xmlHttp.response);
+        }
+    })
+    //xmlHttp.send( "username=Dani%40asd.c&password=d" );
     
 
 

@@ -1,0 +1,26 @@
+{% extends "login" %}
+
+{% block head %}
+{{ super() }}
+ <style>
+    #error{
+        color: white;
+        margin-top: 10px;
+        background-color: #dc143c;
+        padding: 10px;
+        border-radius: 10px;
+        border-style: solid;
+        border-color: #a60e2c;
+        border-width: 0 0 5px 0;
+        font-size: large;
+        border-radius: 0 20px 3px 20px;
+    }
+    #error::before{
+        font-size: xx-large;
+    content: "⚠️"
+    ;}</style>
+{% endblock head %}
+
+{% block error %}
+<div id="error">{{errormessage}}</div>
+{% endblock error %}
