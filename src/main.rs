@@ -2,20 +2,19 @@
 //mod cors;
 mod table_of_contents;
 //#[path ="database_handlers/pages.rs"]
-//mod pages;
-#[path ="database_handlers/page_owner.rs"]
-mod page_owner;
-#[path ="database_handlers/db_utils.rs"]
-mod db_utils;
+mod pages;
+mod user;
+mod utils;
 mod webeditor;
-mod config_file;
+mod content;
 mod language_file;
 //mod sessions;
 
 
-use std::sync::Mutex;
+use std::{sync::Mutex, fs::File};
 use std::time::Duration;
-use rocket::{routes, launch};
+use pages::Page;
+use rocket::{routes, launch, fs};
 use rocket_session_store::{self, SessionStore, CookieConfig};
 use rocket::config::{LogLevel};
 use rocket_session_store::memory::MemoryStore;
@@ -25,27 +24,28 @@ use rusqlite::Connection;
 type DbConn = Mutex<Connection>;
 
 
-/*
-    fn from_request<'life0,'async_trait>(request: &'r rocket::Request<'life0>) ->  core::pin::Pin<Box<dyn core::future::Future<Output = request::Outcome<Self,Self::Error> > + core::marker::Send+'async_trait> >where 'r:'async_trait,'life0:'async_trait,Self:'async_trait {
-        todo!()
-    } */
-
 
 #[launch]
 fn rocket() -> _ {
-    let pageowner_conn = page_owner::get_database();
-    //page_owner::delete_user(&pageowner_conn, "dayos");
-    page_owner::create_user(
-        &pageowner_conn, 
-        page_owner::PageOwner{
-            page_owner_id: "dayos".to_string(), 
+    _ = std::fs::remove_file("/home/ubuntu/daytheipc-com/db/database.db");
+    let connection = utils::get_database(vec![user::CREATION_RULES, pages::PAGE_CREATION_RULES, pages::PAGE_TRIGGER_RULES, pages::PAGEUSER_CREATION_RULES]);
+    user::create_user(
+        &connection, 
+        user::User{
+            user_id: "dayos".to_string(), 
             password: "1234".to_string(), 
             display_name: None,
             description: None, 
             profile_picture: None,
-            is_program_admin: 1
+            is_program_admin: 1,
         }
     );
+    pages::create_page(&connection, "seggs".into());
+    pages::set_page_admin(&connection, "seggs", "dayos");
+    pages::create_page(&connection, "seggs2".into());
+    pages::set_page_admin(&connection, "seggs2", "dayos");
+    println!("É ADMIN DA PÁGINA???? {}", pages::is_page_admin(&connection, "seggs", "dayos"));
+    println!("É ADMIN DA PÁGINA???? {}", pages::is_page_admin(&connection, "aisoudhuyoias", "dayos"));
     
 
     let memory_store: MemoryStore::<String> = MemoryStore::default();
@@ -56,23 +56,17 @@ fn rocket() -> _ {
 		// The cookie config is used to set the cookie's path and other options.
 		cookie: CookieConfig{path:Some("/".to_string()), ..Default::default()}
 	};
-    /* = Databases{
-        page_owners_db: page_owner::get_database(),
-        pages: vec![]
-    }; */
-    let config = config_file::get_config_file();
+    let config = utils::get_config_file();
     let figment = rocket::Config::figment()
         .merge(("secret_key", config.secret_key))
         .merge(("port", config.port))
         .merge(("log_level", LogLevel::Critical));
     rocket::custom(figment).mount("/", routes![
-        //oldgetdocument::get_page, 
-        //::get_content, 
         webeditor::post_editor,
-        webeditor::editor, 
+        webeditor::editor,
+        webeditor::create_page,
     ])
-    .manage(Mutex::new(pageowner_conn))
+    .manage(Mutex::new(connection))
     .attach(store.fairing())
     .attach(Template::fairing())
-    //.attach(cors.)
 }

@@ -54,11 +54,11 @@
 <h4>I'll kill you if you are just a random who found this page, I know where you live</h4>
 <h5>(that's a joke we don't collect any IP data)</h5>
 <br><hr> <br>
-<form action="/p/login" method="post">
+<form action="/login" method="post">
     <div class="mb-3 row">
-        <label for="page_owner_id">Username</label>
+        <label for="user_id">Username</label>
         <div>
-            <input type="text" name="page_owner_id" required>
+            <input type="text" name="user_id" required>
         </div>
     </div>
     <div>

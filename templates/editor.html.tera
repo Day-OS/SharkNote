@@ -1,39 +1,216 @@
 {% extends "base" %}
-{% block body %}
-<style>#editor{height: 1000px;}</style>
-    <div id="editor"># a 
-    function foo(items) {
-    var x = "All this is syntax highlighted";
-    return x;
-    }</div>
+
+
+
+{% block head %}
+    <style>
+        .files{
+            background-color: #202020;
+            padding: 5px;
+            margin: 10px;
+        }
+        ul{
+            margin: 0 !important;}
+        .uk-link,a:link, a, a:visited, a:active{color: unset !important}
+        body{
+            background-color:#202020;
+        }
+        a svg{
+            width: 15px;
+        }
+        #editor{
+            position: relative;
+            height: 100%;
+        }
+        .split {
+            background-color:#272727;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+        }
+        
+        .gutter {
+            background-color: #202020;
+            background-repeat: no-repeat;
+            background-position: 50%;
+        }
+        
+        .gutter.gutter-horizontal {
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+            cursor: col-resize;
+        }
+
+    </style>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.15/dist/css/uikit.min.css" />
+
+<!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.15/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.15/dist/js/uikit-icons.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.16.0/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.16.0/src-min/mode-markdown.js"></script>
+    <script src="https://unpkg.com/split.js/dist/split.min.js"></script>
     <script>
-    var pagename = window.location.href + (window.location.href.endsWith("/")? "":"/");
-    //https://moon.daytheipc.com/p/editor/signup?email=Dani%40asd.c&password=d
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "POST", "/p/login", false ); // false for synchronous request
-    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xmlHttp.addEventListener("load", function() {
-        // if the request succeeded
-        if (xmlHttp.status >= 200 && xmlHttp.status < 300) {
-            // print the response to the request
-            console.log(xmlHttp.response);
+        function select_page(element){
+            window.location.href = "/editor?page=" + element.value;
         }
-    })
-    //xmlHttp.send( "username=Dani%40asd.c&password=d" );
 
+        var pagename = window.location.href + (window.location.href.endsWith("/")? "":"/");
+        //https://moon.daytheipc.com/p/editor/signup?email=Dani%40asd.c&password=d
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "POST", "/p/login", false ); // false for synchronous request
+        xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xmlHttp.addEventListener("load", function() {
+            // if the request succeeded
+            if (xmlHttp.status >= 200 && xmlHttp.status < 300) {
+                // print the response to the request
+                console.log(xmlHttp.response);
+            }
+        })
+        //xmlHttp.send( "username=Dani%40asd.c&password=d" );
 
-
-
-    //https://ace.c9.io/#nav=howto
-    var editor = ace.edit("editor");
-    var md = ace.createEditSession("some js code");
-    //console.log(editor.getValue())
-    editor.setTheme("ace/theme/monokai");
-    editor.session.setMode("ace/mode/markdown");
+        window.onload = ()=>{
+            Split(['#split-0', '#split-1', '#split-2'],{ 
+                sizes: [20, 80, 0],
+                minSize: [30, 30, 0],
+            })
+                //https://ace.c9.io/#nav=howto
+            var editor = ace.edit("editor");
+            editor.resize();
+            var md = ace.createEditSession("some js code");
+            //console.log(editor.getValue())
+            editor.setTheme("ace/theme/twilight");
+            editor.session.setMode("ace/mode/markdown");
+        }
     </script>
+{% endblock head %}
+
+
+{% block body %}
+
+{# https://getuikit.com/docs/modal #}
+
+
+{#DIALOGS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#}
+{# Create Page Dialog#}
+<div id="my-id" uk-modal>
+    <div class="uk-modal-dialog"><form class="uk-form-horizontal uk-margin-large" action="create_page" method="post">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Create a page</h2>
+        </div>
+        <div class="uk-modal-body">
+            <div class="uk-margin">
+                <label class="uk-form-label" for="form-horizontal-text">Page Name</label>
+                <div class="uk-form-controls">
+                    <input class="uk-input" name="pagename" id="form-horizontal-text" type="text" placeholder="Some Pagename...">
+                </div>
+            </div>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+            <button class="uk-button uk-button-primary" type="submit">Create</button>
+        </div></form>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{#NAV BAR#}
+<button class="uk-button uk-button-default" type="button">options</button>
+<div uk-dropdown="mode: click">
+    <ul class="uk-nav uk-dropdown-nav">
+        <button uk-toggle="target: #my-id" type="button">Create Page</button>
+    </ul>
+</div>
+
+<div uk-form-custom="target: > * > span:last-child">
+    <select aria-label="Custom controls" onchange="select_page(this)">
+        <option value="" selected disabled hidden>Select a Page</option>
+        {%for page in editor_params.owned_pages%}
+        <option value="{{page.page_display_name}}">{{page.page_id}}</option>
+        {% endfor %}
+    </select>
+    <button class="uk-button uk-button-default" type="button" tabindex="-1">
+        <span uk-icon="icon: list"></span>
+        <span></span>
+    </button>
+</div>
+
+<div class="split">
+    <div id="split-0">
+        {#SELECT OWNED PAGE TO MANAGE#}
+
+        {% if editor_params.is_page_from_owner %} 
+            <div>Selected Page: {{editor_params.page_name}}</div>
+        {%elif not editor_params.page_name == "" %}
+            <h1>You don't Own this page :/</h1>
+        {% endif %}
+
+        
+
+
+        {#FILES FROM PAGE FOLDER#}
+        {% if editor_params.is_page_from_owner %}
+        <div class="files">
+            <ul class="uk-list">
+                {%for file in editor_params.files %}
+                    {% if file is ending_with(".css") %}
+                        <li style="color: dodgerblue;">
+                    {% elif file is ending_with(".js") %}
+                        <li style="color: yellow;">
+                    {% elif file is ending_with(".html") %}
+                        <li style="color: chocolate;">
+                    {% elif file is ending_with(".scss") or file is ending_with(".sass") %}
+                        <li style="color:crimson;">
+                    {% else %}
+                        <li style="color: white;">  
+                    {% endif %}
+                        <a href="">
+                            <span uk-icon="icon: file-text"></span>
+                            <span style="color:white">{{file}}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+
+        <button>as</button>
+    </div>
+
+    {% if editor_params.is_page_from_owner %}   
+        <div id="split-1">
+            <div id="editor">
+                # a 
+                function foo(items) {
+                var x = "All this is syntax highlighted";
+                return x;
+                }
+            </div>
+        </div>
+        <div id="split-2">
+            <iframe src="" frameborder="0"></iframe>
+        </div>
+    {% endif %}
+</div>
+
+
+    
 
 
 
