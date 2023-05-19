@@ -3,7 +3,7 @@ use rocket_dyn_templates::{Template, context};
 use rocket_session_store::{Session, SessionError};
 use rusqlite::Connection;
 use serde::Serialize;
-use crate::{user, pages::{self, Page}};
+use crate::{user, pages::{self, Page, PAGE_DIR}, utils::{Directory, self, get_directory_file_names}};
 use crate::utils::DBErrors::*;
 use crate::language_file::get_file;
 
@@ -24,8 +24,8 @@ struct  EditorParameters<>{
     is_page_from_owner:bool,
     user_id: String,  
     page_name: String,
-    owned_pages:Vec<Page>,
-    files: Vec<String>
+    owned_pages: Vec<Page>,
+    files: Directory,//Vec<String>
 }
 impl Default for EditorParameters {
     fn default() -> EditorParameters {
@@ -34,7 +34,7 @@ impl Default for EditorParameters {
             user_id: "".into(), 
             page_name: "".into(), 
             owned_pages:vec![], 
-            files: vec![] 
+            files: Directory{name: "?".into(),directories:vec![],files:vec![]}
         }
     }
 }
@@ -101,6 +101,8 @@ pub async fn editor(session: Session<'_, String>, db: &State<crate::DbConn> , er
     };
 
     fn manage_editor_template_parameters(database: &Connection, editor_params: &mut EditorParameters){
+
+        
         match pages::get_owned_pages(&database, &editor_params.user_id) {
             Ok(vec)=>{
                 editor_params.owned_pages = vec;
@@ -116,7 +118,11 @@ pub async fn editor(session: Session<'_, String>, db: &State<crate::DbConn> , er
 
         if !pages::is_page_admin(&database, &editor_params.page_name, &editor_params.user_id){return;}
         editor_params.is_page_from_owner = true;
-        editor_params.files = pages::get_pages_files_list(&editor_params.page_name);
+
+        let mut page_dir = utils::get_program_files_location();
+        page_dir.push_str(PAGE_DIR);
+        page_dir.push_str(&editor_params.page_name);
+        editor_params.files = get_directory_file_names(page_dir,None);//pages::get_pages_files_list(&editor_params.page_name);
         //TO-DO: SEND EVERY FILE INSIDE PAGE TO HTML TEMPLATE
         //editor_params.files;
     

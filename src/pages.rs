@@ -1,8 +1,9 @@
 use crate::{utils::{self, DBErrors}, user};
 use rusqlite::{Connection, params};
 use serde::Serialize;
+use walkdir::WalkDir;
 
-static PAGE_DIR: &str = "pages/";
+pub(crate) static PAGE_DIR: &str = "pages/";
 
 pub static PAGE_CREATION_RULES: &str = "
 CREATE TABLE page (
@@ -41,8 +42,8 @@ pub struct PageUser {
 
 pub fn check_and_fix_page(c : &Connection, page : String){
     let mut page_dir = utils::get_program_files_location();
-        page_dir.push_str(PAGE_DIR);
-        page_dir.push_str(&page);
+    page_dir.push_str(PAGE_DIR);
+    page_dir.push_str(&page);
     match std::fs::read_dir(page_dir){
         Ok(_) =>{println!("page_exists")}
         Err(_) => {
@@ -93,16 +94,16 @@ pub fn get_pages_files_list(page : &String)-> Vec<String> {
     page_dir.push_str(PAGE_DIR);
     page_dir.push_str(&page);
 
-    match std::fs::read_dir(page_dir){
-        Ok(paths) =>{
-            
-            for path in paths {
-                let path = path.unwrap().file_name().into_string().unwrap();
-                files.push(path);
-            }
+    
+
+    for entry in WalkDir::new(&page_dir).into_iter().filter_map(|e| e.ok()) {
+        let mut path: String = entry.path().display().to_string();
+        path = path.replace(&page_dir, "");
+        if entry.metadata().unwrap().is_file() {
+            files.push(path);
         }
-        Err(_) => {}
     }
+
     files
 }
 

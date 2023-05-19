@@ -1,17 +1,81 @@
 {% extends "base" %}
 
+{% macro showfiles(dir)%}
+    <ul class="uk-list">
+    {% for directory in dir.directories %}
+        <input class="folder-checkbox" type="checkbox" checked="true" id="checkbox-{{directory.name}}">
+        <label for="checkbox-{{directory.name}}">{{directory.name}}</label>
+        {{self::showfiles(dir=directory)}}
+    {% endfor %}
+    {% for file in dir.files %}
+        {% if file.name is ending_with(".css") %}
+            <li style="color: dodgerblue;">
+        {% elif file.name is ending_with(".js") %}
+            <li style="color: yellow;">
+        {% elif file.name is ending_with(".html") %}
+            <li style="color: chocolate;">
+        {% elif file.name is ending_with(".scss") or file.name is ending_with(".sass") %}
+            <li style="color:crimson;">
+        {% else %}
+            <li style="color: white;">  
+        {% endif %}
+            <a onclick="load_file(file.path)">
+                <span uk-icon="icon: file-text"></span>
+                <span style="color:white">{{file.name}}</span>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+{% endmacro %}
+
+
+
 
 
 {% block head %}
     <style>
+
+        label{font-weight: bolder;}
+        .folder-checkbox{
+            width: 0;
+            visibility: hidden;
+        }
+
+        .folder-checkbox:checked + label::before{
+            content: ">";
+        }
+
+        .folder-checkbox + label::before{
+            color: white;
+            padding-right: 4px;
+            position: relative;
+            content: "v";
+        }
+        .folder-checkbox:checked ~ ul{
+            display: none;
+        }
+        li{
+            overflow: hidden;
+
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+
+        label:hover{
+            cursor:pointer;
+        }
         .files{
             background-color: #202020;
             padding: 5px;
             margin: 10px;
         }
-        ul{
-            margin: 0 !important;}
+        ul > ul {margin: 0 !important; margin-left: 20px !important;}
+
         .uk-link,a:link, a, a:visited, a:active{color: unset !important}
+        
         body{
             background-color:#202020;
         }
@@ -44,7 +108,7 @@
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.15/dist/css/uikit.min.css" />
 
-<!-- UIkit JS -->
+    <!-- UIkit JS -->
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.15/dist/js/uikit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.15/dist/js/uikit-icons.min.js"></script>
 
@@ -52,23 +116,32 @@
     <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.16.0/src-min/mode-markdown.js"></script>
     <script src="https://unpkg.com/split.js/dist/split.min.js"></script>
     <script>
+        const PAGE_SELECTED = new URLSearchParams(window.location.search).get('page');
         function select_page(element){
             window.location.href = "/editor?page=" + element.value;
         }
 
-        var pagename = window.location.href + (window.location.href.endsWith("/")? "":"/");
-        //https://moon.daytheipc.com/p/editor/signup?email=Dani%40asd.c&password=d
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "POST", "/p/login", false ); // false for synchronous request
-        xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xmlHttp.addEventListener("load", function() {
-            // if the request succeeded
-            if (xmlHttp.status >= 200 && xmlHttp.status < 300) {
-                // print the response to the request
-                console.log(xmlHttp.response);
-            }
-        })
-        //xmlHttp.send( "username=Dani%40asd.c&password=d" );
+        function load_file(element){
+
+
+            var request = new XMLHttpRequest()
+            request.open( "GET", "/content/"+ PAGE_SELECTED +"/" + element.value , false ); // false for synchronous request
+            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.addEventListener("load", ()=> {
+                // if the request succeeded
+                if (request.status >= 200 && request.status < 300) {
+                    // print the response to the request
+                    console.log(request.response);
+                }
+
+            }) 
+            request.send( "username=Dani%40asd.c&password=d" );
+
+
+
+        }
+        
+        //
 
         window.onload = ()=>{
             Split(['#split-0', '#split-1', '#split-2'],{ 
@@ -166,29 +239,12 @@
         {#FILES FROM PAGE FOLDER#}
         {% if editor_params.is_page_from_owner %}
         <div class="files">
-            <ul class="uk-list">
-                {%for file in editor_params.files %}
-                    {% if file is ending_with(".css") %}
-                        <li style="color: dodgerblue;">
-                    {% elif file is ending_with(".js") %}
-                        <li style="color: yellow;">
-                    {% elif file is ending_with(".html") %}
-                        <li style="color: chocolate;">
-                    {% elif file is ending_with(".scss") or file is ending_with(".sass") %}
-                        <li style="color:crimson;">
-                    {% else %}
-                        <li style="color: white;">  
-                    {% endif %}
-                        <a href="">
-                            <span uk-icon="icon: file-text"></span>
-                            <span style="color:white">{{file}}</span>
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
+            {{self::showfiles(dir=editor_params.files)}}
         </div>
         {% endif %}
         
+
+
 
         <button>as</button>
     </div>

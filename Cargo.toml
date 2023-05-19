@@ -20,3 +20,4 @@ inquire = "0.6.0"
 libaes = "0.6.4"
 rocket-session-store = "0.2.0"
 rocket_dyn_templates = {version = "0.1.0-rc.2", features = ["handlebars", "tera"]}
+walkdir = "2.3.3"

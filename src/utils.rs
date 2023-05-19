@@ -1,3 +1,4 @@
+use rocket::tokio::fs::read_dir;
 use rusqlite::{Connection, params};
 use std::fs::File;
 use std::{path::Path, fs};
@@ -68,6 +69,41 @@ pub fn get_config_file() -> Config{
     let s = fs::read_to_string(Path::new(&path)).unwrap();
     let ron: Config = ron::from_str(s.as_str()).unwrap();
     ron
+}
+
+#[derive(Serialize)]
+pub struct Directory{
+    pub(crate) name: String,
+    pub(crate) directories: Vec<Directory>,
+    pub(crate) files: Vec<FileInfo>
+}
+
+#[derive(Serialize)]
+pub struct FileInfo{
+    pub(crate) name: String,
+    pub(crate) path: String,
+}
+
+pub fn get_directory_file_names(root: String, name: Option<String>)-> Directory{
+    let mut dir: Directory = Directory { 
+        name: name.unwrap_or("root".into()),
+        directories: vec![],
+        files: vec![] 
+    };
+    for path in fs::read_dir(root).unwrap().filter_map(|p| p.ok()){
+        let metadata = path.metadata().unwrap();
+        if metadata.is_dir() {
+            dir.directories.push(get_directory_file_names(path.path().display().to_string(), Some(path.file_name().into_string().unwrap())));
+        }
+        else if metadata.is_file() {
+            let file = FileInfo{
+                name: path.file_name().into_string().unwrap(),
+                path: path.path().display().to_string()
+            };
+            dir.files.push(file);
+        }
+    };
+    dir
 }
 
 

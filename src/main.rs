@@ -44,8 +44,6 @@ fn rocket() -> _ {
     pages::set_page_admin(&connection, "seggs", "dayos");
     pages::create_page(&connection, "seggs2".into());
     pages::set_page_admin(&connection, "seggs2", "dayos");
-    println!("É ADMIN DA PÁGINA???? {}", pages::is_page_admin(&connection, "seggs", "dayos"));
-    println!("É ADMIN DA PÁGINA???? {}", pages::is_page_admin(&connection, "aisoudhuyoias", "dayos"));
     
 
     let memory_store: MemoryStore::<String> = MemoryStore::default();
@@ -65,6 +63,7 @@ fn rocket() -> _ {
         webeditor::post_editor,
         webeditor::editor,
         webeditor::create_page,
+        content::get_content
     ])
     .manage(Mutex::new(connection))
     .attach(store.fairing())
