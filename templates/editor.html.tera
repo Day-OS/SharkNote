@@ -29,134 +29,18 @@
 {% endmacro %}
 
 
-
-
-
 {% block head %}
-    <style>
-
-        label{font-weight: bolder;}
-        .folder-checkbox{
-            width: 0;
-            visibility: hidden;
-        }
-
-        .folder-checkbox:checked + label::before{
-            content: ">";
-        }
-
-        .folder-checkbox + label::before{
-            color: white;
-            padding-right: 4px;
-            position: relative;
-            content: "v";
-        }
-        .folder-checkbox:checked ~ ul{
-            display: none;
-        }
-        li{
-            overflow: hidden;
-
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-
-        label:hover{
-            cursor:pointer;
-        }
-        .files{
-            background-color: #202020;
-            padding: 5px;
-            margin: 10px;
-        }
-        ul > ul {margin: 0 !important; margin-left: 20px !important;}
-
-        .uk-link,a:link, a, a:visited, a:active{color: unset !important}
-        
-        body{
-            background-color:#202020;
-        }
-        a svg{
-            width: 15px;
-        }
-        #editor{
-            position: relative;
-            height: 100%;
-        }
-        .split {
-            background-color:#272727;
-            height: 100%;
-            display: flex;
-            flex-direction: row;
-        }
-        
-        .gutter {
-            background-color: #202020;
-            background-repeat: no-repeat;
-            background-position: 50%;
-        }
-        
-        .gutter.gutter-horizontal {
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
-            cursor: col-resize;
-        }
-
-    </style>
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.15/dist/css/uikit.min.css" />
+    <link rel="stylesheet" href="static/editor.css">
+    <link rel="stylesheet" href="static/3rdparty/css/uikit.min.css" />
 
     <!-- UIkit JS -->
-    <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.15/dist/js/uikit.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.15/dist/js/uikit-icons.min.js"></script>
+    <script src="static/3rdparty/js/uikit.min.js"></script>
+    <script src="static/3rdparty/js/uikit-icons.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.16.0/ace.js" type="text/javascript" charset="utf-8"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.16.0/src-min/mode-markdown.js"></script>
-    <script src="https://unpkg.com/split.js/dist/split.min.js"></script>
-    <script>
-        const PAGE_SELECTED = new URLSearchParams(window.location.search).get('page');
-        function select_page(element){
-            window.location.href = "/editor?page=" + element.value;
-        }
-
-        function load_file(element){
-
-
-            var request = new XMLHttpRequest()
-            request.open( "GET", "/content/"+ PAGE_SELECTED +"/" + element.value , false ); // false for synchronous request
-            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            request.addEventListener("load", ()=> {
-                // if the request succeeded
-                if (request.status >= 200 && request.status < 300) {
-                    // print the response to the request
-                    console.log(request.response);
-                }
-
-            }) 
-            request.send( "username=Dani%40asd.c&password=d" );
-
-
-
-        }
-        
-        //
-
-        window.onload = ()=>{
-            Split(['#split-0', '#split-1', '#split-2'],{ 
-                sizes: [20, 80, 0],
-                minSize: [30, 30, 0],
-            })
-                //https://ace.c9.io/#nav=howto
-            var editor = ace.edit("editor");
-            editor.resize();
-            var md = ace.createEditSession("some js code");
-            //console.log(editor.getValue())
-            editor.setTheme("ace/theme/twilight");
-            editor.session.setMode("ace/mode/markdown");
-        }
-    </script>
+    <script src="static/3rdparty/js/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/3rdparty/js/mode-markdown.js"></script>
+    <script src="static/3rdparty/js/split.min.js"></script>
+    <script src="static/editor.js"></script>
 {% endblock head %}
 
 
@@ -189,24 +73,11 @@
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 {#NAV BAR#}
-<button class="uk-button uk-button-default" type="button">options</button>
+<button class="dtipc-button" type="button">options</button>
 <div uk-dropdown="mode: click">
     <ul class="uk-nav uk-dropdown-nav">
-        <button uk-toggle="target: #my-id" type="button">Create Page</button>
+        <button class="dtipc-button" uk-toggle="target: #my-id" type="button">Create Page</button>
     </ul>
 </div>
 
@@ -217,58 +88,47 @@
         <option value="{{page.page_display_name}}">{{page.page_id}}</option>
         {% endfor %}
     </select>
-    <button class="uk-button uk-button-default" type="button" tabindex="-1">
+    <button class="dtipc-button" type="button" tabindex="-1">
         <span uk-icon="icon: list"></span>
         <span></span>
     </button>
 </div>
 
+
+
+
+
+{#MAIN PAGE#}
 <div class="split">
     <div id="split-0">
         {#SELECT OWNED PAGE TO MANAGE#}
 
-        {% if editor_params.is_page_from_owner %} 
+        {% if editor_params.is_page_from_owner and editor_params.files %} 
             <div>Selected Page: {{editor_params.page_name}}</div>
         {%elif not editor_params.page_name == "" %}
             <h1>You don't Own this page :/</h1>
         {% endif %}
 
-        
-
 
         {#FILES FROM PAGE FOLDER#}
         {% if editor_params.is_page_from_owner %}
         <div class="files">
-            {{self::showfiles(dir=editor_params.files)}}
+            {% if editor_params.files %}
+                {{self::showfiles(dir=editor_params.files)}}
+            {% endif %}
         </div>
         {% endif %}
         
-
-
-
-        <button>as</button>
     </div>
 
     {% if editor_params.is_page_from_owner %}   
         <div id="split-1">
-            <div id="editor">
-                # a 
-                function foo(items) {
-                var x = "All this is syntax highlighted";
-                return x;
-                }
-            </div>
+            <div id="editor"></div>
         </div>
         <div id="split-2">
             <iframe src="" frameborder="0"></iframe>
         </div>
     {% endif %}
 </div>
-
-
-    
-
-
-
 
 {% endblock body %}

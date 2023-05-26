@@ -25,7 +25,7 @@ struct  EditorParameters<>{
     user_id: String,  
     page_name: String,
     owned_pages: Vec<Page>,
-    files: Directory,//Vec<String>
+    files: Option<Directory>,//Vec<String>
 }
 impl Default for EditorParameters {
     fn default() -> EditorParameters {
@@ -34,7 +34,7 @@ impl Default for EditorParameters {
             user_id: "".into(), 
             page_name: "".into(), 
             owned_pages:vec![], 
-            files: Directory{name: "?".into(),directories:vec![],files:vec![]}
+            files: None
         }
     }
 }
@@ -80,7 +80,7 @@ pub async fn create_page(session: Session<'_, String>, form : Form<createPage>, 
     };
     pages::create_page(&database, form.pagename.clone());
     pages::set_page_admin(&database, &form.pagename.clone(), &name);
-    return Ok(Redirect::to(format!("/editor?page={}","wrongpassword")))
+    return Ok(Redirect::to(format!("/editor?page={}", form.pagename)))
 }
 
 
@@ -122,7 +122,10 @@ pub async fn editor(session: Session<'_, String>, db: &State<crate::DbConn> , er
         let mut page_dir = utils::get_program_files_location();
         page_dir.push_str(PAGE_DIR);
         page_dir.push_str(&editor_params.page_name);
-        editor_params.files = get_directory_file_names(page_dir,None);//pages::get_pages_files_list(&editor_params.page_name);
+        editor_params.files = match get_directory_file_names(page_dir,None) {
+            Ok(directory)=> Some(directory),
+            Err(_) => None,
+        };//pages::get_pages_files_list(&editor_params.page_name);
         //TO-DO: SEND EVERY FILE INSIDE PAGE TO HTML TEMPLATE
         //editor_params.files;
     

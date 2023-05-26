@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 //https://github.com/ProseMirror/prosemirror
 //https://docs.rs/rusqlite/latest/rusqlite/index.html
 //https://docs.rs/libaes/latest/libaes/struct.Cipher.html#
+
 pub enum DBErrors {
 
     CantDeleteUser(String, rusqlite::Error),
@@ -84,16 +85,26 @@ pub struct FileInfo{
     pub(crate) path: String,
 }
 
-pub fn get_directory_file_names(root: String, name: Option<String>)-> Directory{
+pub fn get_directory_file_names(root: String, name: Option<String>)-> Result<Directory, String>{
     let mut dir: Directory = Directory { 
         name: name.unwrap_or("root".into()),
         directories: vec![],
-        files: vec![] 
+        files: vec![]
     };
-    for path in fs::read_dir(root).unwrap().filter_map(|p| p.ok()){
+    
+    let read_dir = match fs::read_dir(root) {
+        Ok(read_dir) => read_dir,
+        Err(_) => return Err("Not found!".into())
+    };
+
+    for path in read_dir.filter_map(|p| p.ok()){
         let metadata = path.metadata().unwrap();
         if metadata.is_dir() {
-            dir.directories.push(get_directory_file_names(path.path().display().to_string(), Some(path.file_name().into_string().unwrap())));
+            dir.directories.push(
+                get_directory_file_names(
+                    path.path().display().to_string(),
+                    Some(path.file_name().into_string().unwrap()
+                )).unwrap());
         }
         else if metadata.is_file() {
             let file = FileInfo{
@@ -103,7 +114,7 @@ pub fn get_directory_file_names(root: String, name: Option<String>)-> Directory{
             dir.files.push(file);
         }
     };
-    dir
+    Ok(dir)
 }
 
 

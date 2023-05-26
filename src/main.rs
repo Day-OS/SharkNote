@@ -14,7 +14,7 @@ mod language_file;
 use std::{sync::Mutex, fs::File};
 use std::time::Duration;
 use pages::Page;
-use rocket::{routes, launch, fs};
+use rocket::{routes, launch, fs::{FileServer, relative}};
 use rocket_session_store::{self, SessionStore, CookieConfig};
 use rocket::config::{LogLevel};
 use rocket_session_store::memory::MemoryStore;
@@ -46,9 +46,11 @@ fn rocket() -> _ {
     pages::set_page_admin(&connection, "seggs2", "dayos");
     
 
-    let memory_store: MemoryStore::<String> = MemoryStore::default();
+
+    
+
 	let store: SessionStore<String> = SessionStore {
-		store: Box::new(memory_store),
+		store: Box::new(MemoryStore::default()),
 		name: "token".into(),
 		duration: Duration::from_secs(3600 * 24 * 3),
 		// The cookie config is used to set the cookie's path and other options.
@@ -65,6 +67,7 @@ fn rocket() -> _ {
         webeditor::create_page,
         content::get_content
     ])
+    .mount("/static", FileServer::from(relative!("static")))
     .manage(Mutex::new(connection))
     .attach(store.fairing())
     .attach(Template::fairing())
