@@ -1,0 +1,35 @@
+.menu {
+    position:relative;
+    display:inline-block;
+    z-index: 2;
+    margin:4px;
+    outline:0;
+    text-align:left;
+}
+.text-menu::before{
+    content: "\2630 \a0 Menu"; 
+}
+
+
+.menu:focus { pointer-events:none; }
+
+.menu:focus-within .menu-dropdown { opacity:1; visibility:visible; }
+
+.menu-dropdown {
+    background-color: #364656;
+    pointer-events: auto;
+    position: absolute;
+    z-index: 1;
+    opacity: 0;
+    visibility: hidden;
+    transition: visibility 1s;
+}
+
+.menu-dropdown a {
+    background:transparent;
+    border:none;
+    outline:0;
+    display:block;
+    color:white;
+    text-decoration:none;
+}

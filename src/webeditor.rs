@@ -1,4 +1,4 @@
-use rocket::{response::{Redirect}, form::Form, State, post, get, FromForm, uri, figment::util};
+use rocket::{response::{Redirect}, form::Form, State, post, get, FromForm, uri, figment::util, request::FromRequest, http::hyper::Request};
 use rocket_dyn_templates::{Template, context};
 use rocket_session_store::{Session, SessionError};
 use rusqlite::Connection;
@@ -38,6 +38,7 @@ impl Default for EditorParameters {
         }
     }
 }
+
 
 
 #[post("/login", data="<form>")]

@@ -1,3 +1,36 @@
+@use 'modal.scss';
+@use 'dropdown.scss';
+
+$color-background:#232323;
+$color-brighter:#F8F8F8;
+$color-bright:#E2E2E2;
+$color-mid: #A7A7A7;
+$color-dark-1:#202020;
+$color-dark-2:#272727;
+
+$size-navbar: 8vh;
+$size-footer: 4vh;
+$size-middle: 88vh;
+
+
+
+/*NAV BAR BUTTONS*/
+.modal-label, .menu:before, select {
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
+
+    padding: calc($size-navbar/8);
+    border-style: solid;
+    border-color: #202020;
+    background-color: $color-dark-2;
+    color: #f9f9f9;
+    font-size: 2vh;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
 
 label{
     font-weight: bolder;
@@ -32,7 +65,7 @@ li{
 
 
 .files{
-    background-color: #202020;
+    background-color: $color-dark-1;
     padding: 5px;
     margin: 10px;
 }
@@ -41,7 +74,7 @@ ul > ul {margin: 0 !important; margin-left: 20px !important;}
 .uk-link,a:link, a, a:visited, a:active{color: unset !important}
 
 body{
-    background-color:#202020;
+    background-color:$color-dark-1;
 }
 a svg{
     width: 15px;
@@ -50,15 +83,23 @@ a svg{
     position: relative;
     height: 100%;
 }
+.navbar{
+    height: $size-navbar;
+}
+
+footer{
+    height: $size-footer;
+}
+
 .split {
-    background-color:#272727;
-    height: 100%;
+    background-color: $color-dark-2;
+    height: $size-middle;
     display: flex;
     flex-direction: row;
 }
 
 .gutter {
-    background-color: #202020;
+    background-color: $color-dark-1;
     background-repeat: no-repeat;
     background-position: 50%;
 }

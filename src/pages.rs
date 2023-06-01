@@ -113,7 +113,6 @@ pub fn create_page(c : &Connection, page : String){ match c.execute("INSERT INTO
         let mut page_dir = utils::get_program_files_location();
         page_dir.push_str(PAGE_DIR);
         page_dir.push_str(&page);
-        println!("{}", page_dir);
         std::fs::create_dir_all(page_dir);
     }
 }}
@@ -124,7 +123,6 @@ pub fn delete_page(c : &Connection, page : Page){match c.execute("DELETE FROM pa
         let mut page_dir = utils::get_program_files_location();
         page_dir.push_str(PAGE_DIR);
         page_dir.push_str(&page.page_id);
-        println!("{}", page_dir);
         std::fs::remove_dir_all(page_dir);
     }
 }}

@@ -1,2 +1,4 @@
 /target
 Cargo.lock
+/static/css/*.css
+/static/css/*.css.map

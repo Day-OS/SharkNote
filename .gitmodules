@@ -1,0 +1,3 @@
+[submodule "static/3rdparty/saffron"]
+	path = static/3rdparty/saffron
+	url = https://github.com/colindresj/saffron.git

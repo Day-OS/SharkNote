@@ -1,4 +1,5 @@
 {% extends "base" %}
+{% import "modal" as modal %}
 
 {% macro showfiles(dir)%}
     <ul class="uk-list">
@@ -30,7 +31,8 @@
 
 
 {% block head %}
-    <link rel="stylesheet" href="static/editor.css">
+    <title>Editor</title>
+    <link rel="stylesheet" href="static/css/editor.css">
     <link rel="stylesheet" href="static/3rdparty/css/uikit.min.css" />
 
     <!-- UIkit JS -->
@@ -46,54 +48,30 @@
 
 {% block body %}
 
-{# https://getuikit.com/docs/modal #}
+<div class="navbar">
+    <div tabindex="0" class="text-menu menu">
+        <div class="menu-dropdown">
+            <select aria-label="Custom controls" onchange="select_page(this)">
+                <option value="" selected disabled hidden>Select a Page</option>
+                {%for page in editor_params.owned_pages%}
+                <option value="{{page.page_display_name}}">{{page.page_id}}</option>
+                {% endfor %}
+            </select>
+            {{ modal::new(
+                button_name="Create a page",
+                title="Create a page:" | safe,
+                content='
+                <form id="createpage" action="create_page" method="post">
+                    <label class="uk-form-label" for="createpage">Page Name</label>
+                    <input name="pagename" id="form-horizontal-text" type="text" placeholder="Some Pagename...">
+                    <button type="submit">Create</button>
+                </form>
+                '
+            )}}
 
-
-{#DIALOGS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#}
-{# Create Page Dialog#}
-<div id="my-id" uk-modal>
-    <div class="uk-modal-dialog"><form class="uk-form-horizontal uk-margin-large" action="create_page" method="post">
-        <button class="uk-modal-close-default" type="button" uk-close></button>
-        <div class="uk-modal-header">
-            <h2 class="uk-modal-title">Create a page</h2>
         </div>
-        <div class="uk-modal-body">
-            <div class="uk-margin">
-                <label class="uk-form-label" for="form-horizontal-text">Page Name</label>
-                <div class="uk-form-controls">
-                    <input class="uk-input" name="pagename" id="form-horizontal-text" type="text" placeholder="Some Pagename...">
-                </div>
-            </div>
-        </div>
-        <div class="uk-modal-footer uk-text-right">
-            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-            <button class="uk-button uk-button-primary" type="submit">Create</button>
-        </div></form>
     </div>
 </div>
-
-
-{#NAV BAR#}
-<button class="dtipc-button" type="button">options</button>
-<div uk-dropdown="mode: click">
-    <ul class="uk-nav uk-dropdown-nav">
-        <button class="dtipc-button" uk-toggle="target: #my-id" type="button">Create Page</button>
-    </ul>
-</div>
-
-<div uk-form-custom="target: > * > span:last-child">
-    <select aria-label="Custom controls" onchange="select_page(this)">
-        <option value="" selected disabled hidden>Select a Page</option>
-        {%for page in editor_params.owned_pages%}
-        <option value="{{page.page_display_name}}">{{page.page_id}}</option>
-        {% endfor %}
-    </select>
-    <button class="dtipc-button" type="button" tabindex="-1">
-        <span uk-icon="icon: list"></span>
-        <span></span>
-    </button>
-</div>
-
 
 
 
