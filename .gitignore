@@ -2,3 +2,5 @@
 Cargo.lock
 /static/css/*.css
 /static/css/*.css.map
+configuration.toml
+db.sqlite

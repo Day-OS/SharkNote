@@ -1,0 +1,22 @@
+{% extends "auth-base" %}
+
+{% block head %}
+    {{ super() }}
+{% endblock head %}
+
+{% block content %}
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="login-tab-pane" role="tabpanel" aria-labelledby="login-tab" tabindex="0">
+    <form action="/auth/confirmation" method="post">
+      <div class="alert alert-success" role="alert">
+        You've received a confirmation code via email to activate your new account. Please check your inbox and enter the code below to complete the process.
+      </div>
+      <div class="form-floating">
+        <input type="text" class="form-control" id="code" placeholder="" name="code" required>
+        <label for="user_id_login">Code</label>
+      </div>
+      <button class="btn btn-primary w-100 py-2" type="submit">Confirm code</button>
+    </form>
+  </div>
+</div>
+{% endblock content %}

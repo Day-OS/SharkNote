@@ -1,0 +1,133 @@
+$blue: #619eb8;
+$blue-darker: #467285;
+$shark-dark: #2f3538;
+$shark-pink: #eac7c7;
+$darker-white: #dee2e6;
+
+
+@media all{
+    html,body {
+    background: linear-gradient(#fff, $shark-pink) !important;
+    height: 100%;
+    }
+}
+
+.nav-item {
+    border-radius: .25rem .25rem 0 0;
+    background-color: $darker-white;
+    *{
+        color: $blue;
+        text-shadow: #2f3538;
+        width: 100%;
+    }
+    *:hover{
+        color: $blue;
+    }
+    
+}
+.tab-content{
+    padding: 20px;
+    background-color: white;
+    border-width: 0 1px 1px 1px;
+    border-style: solid;
+    border-color: $darker-white;
+    border-radius: 0 0 .25rem .25rem;
+}
+
+.btn-primary{
+    font-weight: bolder ;
+    border-width: 2px;
+    border-color: $shark-dark;
+    color: $shark-dark;
+    background-color: $blue ;
+}
+.btn-primary:hover{
+    color: white;
+    background-color: $blue-darker;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 1rem;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  margin-top: -1;
+  border-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+/*
+#error{
+    color: white;
+    margin-top: 10px;
+    background-color: #dc143c;
+    padding: 10px;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: #a60e2c;
+    border-width: 0 0 5px 0;
+    font-size: large;
+    border-radius: 0 20px 3px 20px;
+}
+#error::before{
+    font-size: xx-large;
+content: "⚠️"
+
+label{font-weight: bolder;}
+h5{font-weight: 100;}
+h1, h4,h5{text-align: center;}
+input{
+    background-color: white;
+}
+html{
+    background-color: crimson;
+}
+body{
+    margin: 10px auto 10px auto;
+    height: 90%;
+    width: 80%;
+    border-radius: 30px;
+    background-color: white;
+    border: 3px solid black;
+    padding: 20px;
+    font-family: fantasy;
+}
+form{
+    margin: 0 auto; 
+    width:250px;
+}
+input, button{
+    width: 100%;
+}
+button{
+    color: white;
+    margin-top: 10px;
+    background-color: #dc143c;
+    padding: 10px;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: #a60e2c;
+    border-width: 0 0 5px 0;
+}
+button:active{
+    background-color: #a60e2c;
+    border-color: #dc143c;
+}
+;}
+*/

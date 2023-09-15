@@ -1,5 +1,6 @@
-@use 'modal.scss';
-@use 'dropdown.scss';
+//@use 'modal.scss';
+//@use 'dropdown.scss';
+//@use 'filetypes.scss';
 
 $color-background:#232323;
 $color-brighter:#F8F8F8;
@@ -13,98 +14,37 @@ $size-footer: 4vh;
 $size-middle: 88vh;
 
 
-
-/*NAV BAR BUTTONS*/
-.modal-label, .menu:before, select {
-    text-overflow: ellipsis;
-    display: block;
-    overflow: hidden;
-
-    padding: calc($size-navbar/8);
-    border-style: solid;
-    border-color: #202020;
-    background-color: $color-dark-2;
-    color: #f9f9f9;
-    font-size: 2vh;
-    font-weight: bold;
-    cursor: pointer;
+.nav-link.active {
+  
+  color: $color-brighter !important;
+  border-color: $color-brighter !important;
 }
-
-
-
-label{
-    font-weight: bolder;
-    :hover{
-        cursor:pointer;
-    }
+.nav-link {
+  border-width: 1px !important;
+  border-color: #00000000 !important;
+  border-style: solid !important;
+  margin-left: 5px;
+  background-color: $color-dark-2 !important;
+  color: $color-brighter !important;
 }
-.folder-checkbox{
-    width: 0;
-    visibility: hidden;
-    :checked {
-        + label::before{
-            content: ">";
-        }
-        
-    }
-    + label::before{
-        color: white;
-        padding-right: 4px;
-        position: relative;
-        content: "v";
-    }
+button i{
+  color: $color-dark-2 !important;
 }
-
-li{
-    overflow: hidden;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.nav-link i {
+  color: $color-brighter !important;
+  
 }
-
-
-.files{
-    background-color: $color-dark-1;
-    padding: 5px;
-    margin: 10px;
-}
-ul > ul {margin: 0 !important; margin-left: 20px !important;}
-
-.uk-link,a:link, a, a:visited, a:active{color: unset !important}
 
 body{
     background-color:$color-dark-1;
 }
-a svg{
-    width: 15px;
-}
-#editor{
-    position: relative;
-    height: 100%;
-}
 .navbar{
-    height: $size-navbar;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-footer{
-    height: $size-footer;
-}
 
-.split {
-    background-color: $color-dark-2;
-    height: $size-middle;
-    display: flex;
-    flex-direction: row;
-}
-
-.gutter {
-    background-color: $color-dark-1;
-    background-repeat: no-repeat;
-    background-position: 50%;
-}
-
-.gutter.gutter-horizontal {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
-    cursor: col-resize;
+#code *, #preview *{
+  height: 100vh;
+  width: 100vw;
 }

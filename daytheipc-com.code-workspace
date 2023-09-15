@@ -5,10 +5,11 @@
 		},
 		{
 			"path": "../../.daytheipc-com"
-		},
-		{
-			"path": "../../daytheipc-com"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"rust-analyzer.linkedProjects": [
+			"./Cargo.toml",
+		]
+	}
 }

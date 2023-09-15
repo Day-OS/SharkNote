@@ -1,0 +1,385 @@
+04:10:04 [INFO] 🔧 Configured for debug.
+04:10:04 [INFO] address: [1;49;39m127.0.0.1[0m
+04:10:04 [INFO] port: [1;49;39m8000[0m
+04:10:04 [INFO] workers: [1;49;39m4[0m
+04:10:04 [INFO] max blocking threads: [1;49;39m512[0m
+04:10:04 [INFO] ident: [1;49;39mRocket[0m
+04:10:04 [INFO] IP header: [1;49;39mX-Real-IP[0m
+04:10:04 [INFO] limits: [1;49;39mbytes = 8KiB, data-form = 2MiB, file = 1MiB, form = 32KiB, json = 1MiB, msgpack = 1MiB, string = 8KiB[0m
+04:10:04 [INFO] temp dir: [1;49;39m/tmp[0m
+04:10:04 [INFO] http/2: [1;49;39mtrue[0m
+04:10:04 [INFO] keep-alive: [1;49;39m5[0m[1;49;39ms[0m
+04:10:04 [INFO] tls: [1;49;39mdisabled[0m
+04:10:04 [INFO] secret key: [1;49;39m[generated][0m
+04:10:04 [WARN] secrets enabled without a stable `secret_key`
+04:10:04 [INFO] disable `secrets` feature or configure a `secret_key`
+04:10:04 [INFO] this becomes an [31merror[0m in non-debug profiles
+04:10:04 [INFO] shutdown: [1;49;39mctrlc = true, force = true, signals = [SIGTERM], grace = 2s, mercy = 3s[0m
+04:10:04 [INFO] log level: [1;49;39mcritical[0m
+04:10:04 [INFO] cli colors: [1;49;39mtrue[0m
+04:10:04 [INFO] 📬 [35mRoutes[0m:
+04:10:04 [INFO] [36m([0m[37mauth_page[0m[36m)[0m [32mGET[0m [34m/auth[0m
+04:10:04 [INFO] [36m([0m[37meditor[0m[36m)[0m [32mGET[0m [34m/editor?<page_id>[0m
+04:10:04 [INFO] [36m([0m[37mlogin[0m[36m)[0m [32mPOST[0m [34m/auth/login[0m
+04:10:04 [INFO] [36m([0m[37mregister[0m[36m)[0m [32mPOST[0m [34m/auth/register[0m
+04:10:04 [INFO] [36m([0m[37mpreview[0m[36m)[0m [32mGET[0m [34m/<page_id>/<path>?preview=true[0m
+04:10:04 [INFO] [36m([0m[37mconfirmation[0m[36m)[0m [32mPOST[0m [34m/auth/confirmation[0m
+04:10:04 [INFO] [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:04 [INFO] 🥅 [35mCatchers[0m:
+04:10:04 [INFO] [36m([0m[37mnot_found[0m[36m)[0m [34m404[0m
+04:10:04 [INFO] 📡 [35mFairings[0m:
+04:10:04 [INFO] [1;49;39mShield[0m ([1;34mliftoff, response, singleton[0m)
+04:10:04 [INFO] [1;49;39mreCAPTCHA v3[0m ([1;34mignite[0m)
+04:10:04 [INFO] [1;49;39mDatabase Startup[0m ([1;34mignite[0m)
+04:10:04 [INFO] [1;49;39m'sqlite_logs' Database Pool[0m ([1;34mignite, shutdown[0m)
+04:10:04 [INFO] [1;49;39mshark_note::configuration::SharkNoteConfig[0m ([1;34mignite[0m)
+04:10:04 [INFO] [1;49;39mTemplating[0m ([1;34mignite, liftoff, request[0m)
+04:10:04 [INFO] [1;49;39mSession Store[0m ([1;34mignite, response, singleton[0m)
+04:10:04 [INFO] 🛡️ [35mShield[0m:
+04:10:04 [INFO] Permissions-Policy: [49;39minterest-cohort=()[0m
+04:10:04 [INFO] X-Content-Type-Options: [49;39mnosniff[0m
+04:10:04 [INFO] X-Frame-Options: [49;39mSAMEORIGIN[0m
+04:10:04 [INFO] 📐 [35mTemplating[0m:
+04:10:04 [INFO] directory: [37mtemplates[0m
+04:10:04 [INFO] engines: [37m["tera", "hbs"][0m
+04:10:04 [WARN] 🚀 [1;49;39mRocket has launched from[0m [1;4;49;39mhttp://127.0.0.1:8000[0m
+04:10:11 [INFO] [32mGET[0m [34m/auth[0m [33mtext[0m[33m/[0m[33mhtml[0m:
+04:10:11 [INFO] Matched: [36m([0m[37mauth_page[0m[36m)[0m [32mGET[0m [34m/auth[0m
+04:10:11 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:11 [INFO] [32mResponse succeeded.[0m
+04:10:11 [INFO] [32mGET[0m [34m/static/3rdparty/css/reset.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:10:11 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:11 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:11 [INFO] [32mResponse succeeded.[0m
+04:10:11 [INFO] [32mGET[0m [34m/static/css/base.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:10:11 [INFO] [32mGET[0m [34m/static/css/auth.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:10:11 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:11 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:11 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:11 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:11 [INFO] [32mResponse succeeded.[0m
+04:10:11 [INFO] [32mResponse succeeded.[0m
+04:10:11 [INFO] [32mGET[0m [34m/static/logo.svg[0m [33mimage[0m[33m/[0m[33mavif[0m:
+04:10:11 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:11 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:11 [INFO] [32mResponse succeeded.[0m
+04:10:11 [INFO] [32mGET[0m [34m/static/brahaij-emoji.png[0m [33mimage[0m[33m/[0m[33mavif[0m:
+04:10:11 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:11 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:11 [INFO] [32mResponse succeeded.[0m
+04:10:12 [INFO] [32mGET[0m [34m/static/css/auth.css.map[0m:
+04:10:12 [INFO] [32mGET[0m [34m/static/css/base.css.map[0m:
+04:10:12 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:12 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:12 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:12 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:12 [INFO] [32mResponse succeeded.[0m
+04:10:12 [INFO] [32mResponse succeeded.[0m
+04:10:17 [INFO] [32mPOST[0m [34m/auth/register[0m [33mapplication[0m[33m/[0m[33mx-www-form-urlencoded[0m:
+04:10:17 [INFO] Matched: [36m([0m[37mregister[0m[36m)[0m [32mPOST[0m [34m/auth/register[0m
+04:10:19 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:19 [INFO] [32mResponse succeeded.[0m
+04:10:19 [INFO] [32mGET[0m [34m/static/3rdparty/css/reset.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:10:19 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:19 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:19 [INFO] [32mResponse succeeded.[0m
+04:10:19 [INFO] [32mGET[0m [34m/static/css/base.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:10:19 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:19 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:19 [INFO] [32mResponse succeeded.[0m
+04:10:19 [INFO] [32mGET[0m [34m/static/css/auth.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:10:19 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:19 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:19 [INFO] [32mResponse succeeded.[0m
+04:10:19 [INFO] [32mGET[0m [34m/static/logo.svg[0m [33mimage[0m[33m/[0m[33mavif[0m:
+04:10:19 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:19 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:19 [INFO] [32mResponse succeeded.[0m
+04:10:20 [INFO] [32mGET[0m [34m/static/css/auth.css.map[0m:
+04:10:20 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:20 [INFO] [32mGET[0m [34m/static/css/base.css.map[0m:
+04:10:20 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:20 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:20 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:20 [INFO] [32mResponse succeeded.[0m
+04:10:20 [INFO] [32mResponse succeeded.[0m
+04:10:21 [INFO] [32mPOST[0m [34m/auth/confirmation[0m [33mapplication[0m[33m/[0m[33mx-www-form-urlencoded[0m:
+04:10:21 [INFO] Matched: [36m([0m[37mconfirmation[0m[36m)[0m [32mPOST[0m [34m/auth/confirmation[0m
+04:10:21 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:21 [INFO] [32mResponse succeeded.[0m
+04:10:22 [INFO] [32mGET[0m [34m/static/3rdparty/css/reset.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:10:22 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:22 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:22 [INFO] [32mGET[0m [34m/static/css/base.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:10:22 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:22 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:22 [INFO] [32mResponse succeeded.[0m
+04:10:22 [INFO] [32mResponse succeeded.[0m
+04:10:22 [INFO] [32mGET[0m [34m/static/css/auth.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:10:22 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:22 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:22 [INFO] [32mResponse succeeded.[0m
+04:10:22 [INFO] [32mGET[0m [34m/static/logo.svg[0m [33mimage[0m[33m/[0m[33mavif[0m:
+04:10:22 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:22 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:22 [INFO] [32mResponse succeeded.[0m
+04:10:22 [INFO] [32mGET[0m [34m/static/css/auth.css.map[0m:
+04:10:22 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:22 [INFO] [32mGET[0m [34m/static/css/base.css.map[0m:
+04:10:22 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:22 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:22 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:22 [INFO] [32mResponse succeeded.[0m
+04:10:22 [INFO] [32mResponse succeeded.[0m
+04:10:56 [INFO] [32mPOST[0m [34m/auth/confirmation[0m [33mapplication[0m[33m/[0m[33mx-www-form-urlencoded[0m:
+04:10:56 [INFO] Matched: [36m([0m[37mconfirmation[0m[36m)[0m [32mPOST[0m [34m/auth/confirmation[0m
+04:10:56 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:56 [INFO] [32mResponse succeeded.[0m
+04:10:57 [INFO] [32mGET[0m [34m/static/css/base.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:10:57 [INFO] [32mGET[0m [34m/static/3rdparty/css/reset.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:10:57 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:57 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:57 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:57 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:57 [INFO] [32mResponse succeeded.[0m
+04:10:57 [INFO] [32mResponse succeeded.[0m
+04:10:57 [INFO] [32mGET[0m [34m/static/css/auth.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:10:57 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:57 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:57 [INFO] [32mResponse succeeded.[0m
+04:10:57 [INFO] [32mGET[0m [34m/static/logo.svg[0m [33mimage[0m[33m/[0m[33mavif[0m:
+04:10:57 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:57 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:57 [INFO] [32mResponse succeeded.[0m
+04:10:57 [INFO] [32mGET[0m [34m/static/css/base.css.map[0m:
+04:10:57 [INFO] [32mGET[0m [34m/static/css/auth.css.map[0m:
+04:10:57 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:57 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:57 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:10:57 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:10:57 [INFO] [32mResponse succeeded.[0m
+04:10:57 [INFO] [32mResponse succeeded.[0m
+04:11:21 [INFO] [32mPOST[0m [34m/[0m [33mapplication[0m[33m/[0m[33mx-www-form-urlencoded[0m:
+04:11:21 [ERROR] No matching routes for [32mPOST[0m [34m/[0m [33mapplication[0m[33m/[0m[33mx-www-form-urlencoded[0m.
+04:11:21 [WARN] Responding with registered [36m([0m[37mnot_found[0m[36m)[0m [34m404[0m catcher.
+04:11:21 [INFO] [32mResponse succeeded.[0m
+04:11:22 [INFO] [32mGET[0m [34m/.env[0m:
+04:11:22 [ERROR] No matching routes for [32mGET[0m [34m/.env[0m.
+04:11:22 [WARN] Responding with registered [36m([0m[37mnot_found[0m[36m)[0m [34m404[0m catcher.
+04:11:22 [INFO] [32mResponse succeeded.[0m
+04:12:23 [INFO] [32mGET[0m [34m/echo.php[0m:
+04:12:23 [ERROR] No matching routes for [32mGET[0m [34m/echo.php[0m.
+04:12:23 [WARN] Responding with registered [36m([0m[37mnot_found[0m[36m)[0m [34m404[0m catcher.
+04:12:23 [INFO] [32mResponse succeeded.[0m
+04:16:46 [INFO] Change detected: reloading templates.
+04:16:46 [INFO] [32mPOST[0m [34m/auth/confirmation[0m [33mapplication[0m[33m/[0m[33mx-www-form-urlencoded[0m:
+04:16:46 [INFO] Matched: [36m([0m[37mconfirmation[0m[36m)[0m [32mPOST[0m [34m/auth/confirmation[0m
+04:16:46 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:16:46 [INFO] [32mResponse succeeded.[0m
+04:16:46 [INFO] [32mGET[0m [34m/static/3rdparty/css/reset.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:16:46 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:16:46 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:16:46 [INFO] [32mResponse succeeded.[0m
+04:16:46 [INFO] [32mGET[0m [34m/static/css/base.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:16:46 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:16:46 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:16:46 [INFO] [32mResponse succeeded.[0m
+04:16:46 [INFO] [32mGET[0m [34m/static/css/auth.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:16:46 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:16:46 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:16:46 [INFO] [32mResponse succeeded.[0m
+04:16:46 [INFO] [32mGET[0m [34m/static/logo.svg[0m [33mimage[0m[33m/[0m[33mavif[0m:
+04:16:46 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:16:46 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:16:46 [INFO] [32mResponse succeeded.[0m
+04:16:47 [INFO] [32mGET[0m [34m/static/css/base.css.map[0m:
+04:16:47 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:16:47 [INFO] [32mGET[0m [34m/static/css/auth.css.map[0m:
+04:16:47 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:16:47 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:16:47 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:16:47 [INFO] [32mResponse succeeded.[0m
+04:16:47 [INFO] [32mResponse succeeded.[0m
+04:17:06 [INFO] Change detected: reloading templates.
+04:17:06 [INFO] [32mPOST[0m [34m/auth/confirmation[0m [33mapplication[0m[33m/[0m[33mx-www-form-urlencoded[0m:
+04:17:06 [INFO] Matched: [36m([0m[37mconfirmation[0m[36m)[0m [32mPOST[0m [34m/auth/confirmation[0m
+04:17:06 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:06 [INFO] [32mResponse succeeded.[0m
+04:17:06 [INFO] [32mGET[0m [34m/static/3rdparty/css/reset.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:17:06 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:17:06 [INFO] [32mGET[0m [34m/static/css/base.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:17:06 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:06 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:17:06 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:06 [INFO] [32mResponse succeeded.[0m
+04:17:06 [INFO] [32mResponse succeeded.[0m
+04:17:06 [INFO] [32mGET[0m [34m/static/css/auth.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:17:06 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:17:06 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:06 [INFO] [32mResponse succeeded.[0m
+04:17:06 [INFO] [32mGET[0m [34m/static/logo.svg[0m [33mimage[0m[33m/[0m[33mavif[0m:
+04:17:06 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:17:06 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:06 [INFO] [32mResponse succeeded.[0m
+04:17:07 [INFO] [32mGET[0m [34m/static/css/auth.css.map[0m:
+04:17:07 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:17:07 [INFO] [32mGET[0m [34m/static/css/base.css.map[0m:
+04:17:07 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:17:07 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:07 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:07 [INFO] [32mResponse succeeded.[0m
+04:17:07 [INFO] [32mResponse succeeded.[0m
+04:17:38 [INFO] Change detected: reloading templates.
+04:17:38 [INFO] [32mPOST[0m [34m/auth/confirmation[0m [33mapplication[0m[33m/[0m[33mx-www-form-urlencoded[0m:
+04:17:38 [INFO] Matched: [36m([0m[37mconfirmation[0m[36m)[0m [32mPOST[0m [34m/auth/confirmation[0m
+04:17:38 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:38 [INFO] [32mResponse succeeded.[0m
+04:17:38 [INFO] [32mGET[0m [34m/static/3rdparty/css/reset.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:17:38 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:17:38 [INFO] [32mGET[0m [34m/static/css/base.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:17:38 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:38 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:17:38 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:38 [INFO] [32mResponse succeeded.[0m
+04:17:38 [INFO] [32mResponse succeeded.[0m
+04:17:38 [INFO] [32mGET[0m [34m/static/css/auth.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:17:38 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:17:38 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:38 [INFO] [32mResponse succeeded.[0m
+04:17:38 [INFO] [32mGET[0m [34m/static/logo.svg[0m [33mimage[0m[33m/[0m[33mavif[0m:
+04:17:38 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:17:38 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:38 [INFO] [32mResponse succeeded.[0m
+04:17:39 [INFO] [32mGET[0m [34m/static/css/auth.css.map[0m:
+04:17:39 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:17:39 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:39 [INFO] [32mGET[0m [34m/static/css/base.css.map[0m:
+04:17:39 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:17:39 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:17:39 [INFO] [32mResponse succeeded.[0m
+04:17:39 [INFO] [32mResponse succeeded.[0m
+04:18:00 [INFO] [32mPOST[0m [34m/auth/confirmation[0m [33mapplication[0m[33m/[0m[33mx-www-form-urlencoded[0m:
+04:18:00 [INFO] Matched: [36m([0m[37mconfirmation[0m[36m)[0m [32mPOST[0m [34m/auth/confirmation[0m
+04:18:00 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:00 [INFO] [32mResponse succeeded.[0m
+04:18:00 [INFO] [32mGET[0m [34m/static/3rdparty/css/reset.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:18:00 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:18:00 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:00 [INFO] [32mResponse succeeded.[0m
+04:18:00 [INFO] [32mGET[0m [34m/static/css/base.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:18:00 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:18:00 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:00 [INFO] [32mResponse succeeded.[0m
+04:18:00 [INFO] [32mGET[0m [34m/static/css/auth.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:18:00 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:18:00 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:00 [INFO] [32mResponse succeeded.[0m
+04:18:00 [INFO] [32mGET[0m [34m/static/logo.svg[0m [33mimage[0m[33m/[0m[33mavif[0m:
+04:18:00 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:18:00 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:00 [INFO] [32mResponse succeeded.[0m
+04:18:00 [INFO] [32mGET[0m [34m/static/css/auth.css.map[0m:
+04:18:00 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:18:00 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:00 [INFO] [32mGET[0m [34m/static/css/base.css.map[0m:
+04:18:00 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:18:00 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:00 [INFO] [32mResponse succeeded.[0m
+04:18:00 [INFO] [32mResponse succeeded.[0m
+04:18:03 [INFO] [32mPOST[0m [34m/auth/confirmation[0m [33mapplication[0m[33m/[0m[33mx-www-form-urlencoded[0m:
+04:18:03 [INFO] Matched: [36m([0m[37mconfirmation[0m[36m)[0m [32mPOST[0m [34m/auth/confirmation[0m
+04:18:03 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:03 [INFO] [32mResponse succeeded.[0m
+04:18:03 [INFO] [32mGET[0m [34m/static/3rdparty/css/reset.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:18:03 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:18:03 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:03 [INFO] [32mResponse succeeded.[0m
+04:18:03 [INFO] [32mGET[0m [34m/static/css/base.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:18:03 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:18:03 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:03 [INFO] [32mResponse succeeded.[0m
+04:18:03 [INFO] [32mGET[0m [34m/static/css/auth.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:18:03 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:18:03 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:03 [INFO] [32mResponse succeeded.[0m
+04:18:03 [INFO] [32mGET[0m [34m/static/logo.svg[0m [33mimage[0m[33m/[0m[33mavif[0m:
+04:18:03 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:18:03 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:03 [INFO] [32mResponse succeeded.[0m
+04:18:04 [INFO] [32mGET[0m [34m/static/css/auth.css.map[0m:
+04:18:04 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:18:04 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:04 [INFO] [32mGET[0m [34m/static/css/base.css.map[0m:
+04:18:04 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:18:04 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:18:04 [INFO] [32mResponse succeeded.[0m
+04:18:04 [INFO] [32mResponse succeeded.[0m
+04:19:14 [INFO] [32mGET[0m [34m/auth/[0m [33mtext[0m[33m/[0m[33mhtml[0m:
+04:19:14 [INFO] Matched: [36m([0m[37mauth_page[0m[36m)[0m [32mGET[0m [34m/auth[0m
+04:19:14 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:14 [INFO] [32mResponse succeeded.[0m
+04:19:14 [INFO] [32mGET[0m [34m/static/css/base.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:19:14 [INFO] [32mGET[0m [34m/static/3rdparty/css/reset.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:19:14 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:14 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:14 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:14 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:14 [INFO] [32mResponse succeeded.[0m
+04:19:14 [INFO] [32mResponse succeeded.[0m
+04:19:14 [INFO] [32mGET[0m [34m/static/css/auth.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:19:14 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:14 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:14 [INFO] [32mResponse succeeded.[0m
+04:19:14 [INFO] [32mGET[0m [34m/static/logo.svg[0m [33mimage[0m[33m/[0m[33mavif[0m:
+04:19:14 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:14 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:14 [INFO] [32mResponse succeeded.[0m
+04:19:16 [INFO] [32mGET[0m [34m/static/css/auth.css.map[0m:
+04:19:16 [INFO] [32mGET[0m [34m/static/css/base.css.map[0m:
+04:19:16 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:16 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:16 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:16 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:16 [INFO] [32mResponse succeeded.[0m
+04:19:16 [INFO] [32mResponse succeeded.[0m
+04:19:21 [INFO] [32mPOST[0m [34m/auth/register[0m [33mapplication[0m[33m/[0m[33mx-www-form-urlencoded[0m:
+04:19:21 [INFO] Matched: [36m([0m[37mregister[0m[36m)[0m [32mPOST[0m [34m/auth/register[0m
+04:19:21 [ERROR] error returned from database: (code: 1555) UNIQUE constraint failed: user.user_id
+04:19:21 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:21 [INFO] [32mResponse succeeded.[0m
+04:19:21 [INFO] [32mGET[0m [34m/static/css/base.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:19:21 [INFO] [32mGET[0m [34m/static/3rdparty/css/reset.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:19:21 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:21 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:21 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:21 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:21 [INFO] [32mResponse succeeded.[0m
+04:19:21 [INFO] [32mResponse succeeded.[0m
+04:19:21 [INFO] [32mGET[0m [34m/static/css/auth.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+04:19:21 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:21 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:21 [INFO] [32mResponse succeeded.[0m
+04:19:21 [INFO] [32mGET[0m [34m/static/logo.svg[0m [33mimage[0m[33m/[0m[33mavif[0m:
+04:19:21 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:21 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:21 [INFO] [32mResponse succeeded.[0m
+04:19:22 [INFO] [32mGET[0m [34m/static/css/auth.css.map[0m:
+04:19:22 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:22 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:22 [INFO] [32mGET[0m [34m/static/css/base.css.map[0m:
+04:19:22 [INFO] [32mResponse succeeded.[0m
+04:19:22 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:22 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:22 [INFO] [32mResponse succeeded.[0m
+04:19:26 [INFO] [32mGET[0m [34m/static/css/auth.css.map[0m:
+04:19:26 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:26 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:26 [INFO] [32mResponse succeeded.[0m
+04:19:26 [INFO] [32mGET[0m [34m/static/css/base.css.map[0m:
+04:19:26 [INFO] Matched: [36m([0m[37mFileServer: static[0m[36m)[0m [32mGET[0m [4;34m/static[0m[34m/<path..>[0m [[1;49;39m10[0m]
+04:19:26 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+04:19:26 [INFO] [32mResponse succeeded.[0m
+04:22:28 [INFO] [32mGET[0m [34m/[0m:
+04:22:28 [ERROR] No matching routes for [32mGET[0m [34m/[0m.
+04:22:28 [WARN] Responding with registered [36m([0m[37mnot_found[0m[36m)[0m [34m404[0m catcher.
+04:22:28 [INFO] [32mResponse succeeded.[0m

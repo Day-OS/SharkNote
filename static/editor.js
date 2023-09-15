@@ -1,17 +1,25 @@
 const PAGE_SELECTED = new URLSearchParams(window.location.search).get('page');
+
+class File {
+    constructor(name, content, saved, time_saved){
+
+    }
+}
+
 function select_page(element){
     window.location.href = "/editor?page=" + element.value;
 }
 
 function load_file(element){
+    element.dataset.filelocation
     var request = new XMLHttpRequest()
-    request.open( "GET", "/content/"+ PAGE_SELECTED +"/" + element.value , false ); // false for synchronous request
+    request.open( "GET", "/content/"+ element.dataset.filelocation , false ); // false for synchronous request
     request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     request.addEventListener("load", ()=> {
         // if the request succeeded
         if (request.status >= 200 && request.status < 300) {
             // print the response to the request
-            console.log(request.response);
+            console.log(request.response); 
         }
 
     }) 
@@ -19,12 +27,15 @@ function load_file(element){
 }
 
 window.onload = ()=>{
-    Split(['#split-0', '#split-1', '#split-2'],{ 
-        sizes: [20, 80, 0],
-        minSize: [30, 30, 0],
+    //https://ace.c9.io/#nav=howto
+    var editor = ace.edit(document.getElementById("editor"));
+    editor.commands.addCommand({
+        name: 'save',
+        bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
+        exec: function(editor) {
+            console.log("saving", editor.session.getValue())
+        }
     })
-        //https://ace.c9.io/#nav=howto
-    var editor = ace.edit("editor");
     editor.resize();
     var md = ace.createEditSession("some js code");
     //console.log(editor.getValue())

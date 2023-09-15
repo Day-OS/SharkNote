@@ -2,28 +2,24 @@
 {% import "modal" as modal %}
 
 {% macro showfiles(dir)%}
-    <ul class="uk-list">
+    <ul>
     {% for directory in dir.directories %}
-        <input class="folder-checkbox" type="checkbox" checked="true" id="checkbox-{{directory.name}}">
-        <label for="checkbox-{{directory.name}}">{{directory.name}}</label>
+        <input class="folder-checkbox" type="checkbox" checked="false" id="checkbox-{{directory.name}}"><label for="checkbox-{{directory.name}}">{{directory.name}}</label>
         {{self::showfiles(dir=directory)}}
     {% endfor %}
     {% for file in dir.files %}
         {% if file.name is ending_with(".css") %}
-            <li style="color: dodgerblue;">
+            <li class="ft-css">
         {% elif file.name is ending_with(".js") %}
-            <li style="color: yellow;">
+            <li class="ft-js">
         {% elif file.name is ending_with(".html") %}
-            <li style="color: chocolate;">
+            <li class="ft-html"">
         {% elif file.name is ending_with(".scss") or file.name is ending_with(".sass") %}
-            <li style="color:crimson;">
+            <li class="ft-scss">
         {% else %}
-            <li style="color: white;">  
+            <li class="ft-generic">  
         {% endif %}
-            <a onclick="load_file(file.path)">
-                <span uk-icon="icon: file-text"></span>
-                <span style="color:white">{{file.name}}</span>
-            </a>
+                <span class="file-name" data-modifiedtime="{{ file.modified }}" data-filelocation="{{ file.path  | replace(from=editor_params.local_dir, to=``) }}" onclick='load_file(this)'>{{file.name}}</span>
         </li>
     {% endfor %}
     </ul>
@@ -31,13 +27,14 @@
 
 
 {% block head %}
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+
     <title>Editor</title>
     <link rel="stylesheet" href="static/css/editor.css">
-    <link rel="stylesheet" href="static/3rdparty/css/uikit.min.css" />
-
-    <!-- UIkit JS -->
-    <script src="static/3rdparty/js/uikit.min.js"></script>
-    <script src="static/3rdparty/js/uikit-icons.min.js"></script>
 
     <script src="static/3rdparty/js/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="static/3rdparty/js/mode-markdown.js"></script>
@@ -47,66 +44,48 @@
 
 
 {% block body %}
+<!-- Nav tabs -->
 
-<div class="navbar">
-    <div tabindex="0" class="text-menu menu">
-        <div class="menu-dropdown">
-            <select aria-label="Custom controls" onchange="select_page(this)">
-                <option value="" selected disabled hidden>Select a Page</option>
-                {%for page in editor_params.owned_pages%}
-                <option value="{{page.page_display_name}}">{{page.page_id}}</option>
-                {% endfor %}
-            </select>
-            {{ modal::new(
-                button_name="Create a page",
-                title="Create a page:" | safe,
-                content='
-                <form id="createpage" action="create_page" method="post">
-                    <label class="uk-form-label" for="createpage">Page Name</label>
-                    <input name="pagename" id="form-horizontal-text" type="text" placeholder="Some Pagename...">
-                    <button type="submit">Create</button>
-                </form>
-                '
-            )}}
 
-        </div>
+
+
+<nav class="navbar navbar-expand-md">
+    <div class="navbar-collapse w-100 order-1 order-md-0 dual-collapse2">
+        <ul class="nav nav-pills" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab" aria-controls="code" aria-selected="true"><i class="bi bi-code-slash"></i> Code</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab" aria-controls="preview" aria-selected="false"><i class="bi bi-camera-video"></i> Preview</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="files-tab" data-bs-toggle="tab" data-bs-target="#files" type="button" role="tab" aria-controls="files" aria-selected="false"><i class="bi bi-archive"></i> Files</button>
+            </li>
+        </ul>
     </div>
-</div>
+    <div class="mx-auto order-0"></div>
+    <div class="navbar-collapse w-100 order-3">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+                <button type="button" class="btn btn-light">PUBLISH! <i class="bi bi-stars button"></i></button>
+            </li>
+        </ul>
+</nav>
 
 
-
-
-{#MAIN PAGE#}
-<div class="split">
-    <div id="split-0">
-        {#SELECT OWNED PAGE TO MANAGE#}
-
-        {% if editor_params.is_page_from_owner and editor_params.files %} 
-            <div>Selected Page: {{editor_params.page_name}}</div>
-        {%elif not editor_params.page_name == "" %}
-            <h1>You don't Own this page :/</h1>
-        {% endif %}
-
-
-        {#FILES FROM PAGE FOLDER#}
-        {% if editor_params.is_page_from_owner %}
-        <div class="files">
-            {% if editor_params.files %}
-                {{self::showfiles(dir=editor_params.files)}}
-            {% endif %}
-        </div>
-        {% endif %}
+  
+  <!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane active" id="code" role="tabpanel" aria-labelledby="code-tab" tabindex="0">
+        <div id="editor"></div>
+    </div>
+    <div class="tab-pane" id="preview" role="tabpanel" aria-labelledby="preview-tab" tabindex="0">
+        <iframe src="/editor"></iframe>
+    </div>
+    <div class="tab-pane" id="preview" role="tabpanel" aria-labelledby="files-tab" tabindex="0">
         
     </div>
-
-    {% if editor_params.is_page_from_owner %}   
-        <div id="split-1">
-            <div id="editor"></div>
-        </div>
-        <div id="split-2">
-            <iframe src="" frameborder="0"></iframe>
-        </div>
-    {% endif %}
 </div>
-
+  
+  
 {% endblock body %}

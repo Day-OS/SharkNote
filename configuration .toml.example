@@ -1,0 +1,19 @@
+# DEFAULT is where RocketRS configs are stored https://rocket.rs/v0.5-rc/guide/configuration/#rockettoml
+[default]
+port = 8000
+
+[default.auth]
+recaptcha = false
+invite_only = false
+
+#[default.smtp]
+#smtp_relay = "smtp.gmail.com"
+#smtp_username = 
+#smtp_password = 
+
+[default.databases.sqlite_logs]
+url = "db.sqlite"
+
+[global.recaptcha.v3]
+html_key =   "Ex4mPleofAwOrk1ngK3yCH4NG3M3OwOUUuXjhsVX"
+secret_key = "Ex4mPleofAwOrk1ngK3yCH4NG3M3OwOUUuXjhsVX"

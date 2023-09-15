@@ -1,14 +1,35 @@
+@font-face {
+    font-family: "DOS";
+    src: url("/static/3rdparty/ttf/moreperfectdos.ttf");
+}
 
-footer, footer sup, footer a, footer a:hover, footer a:focus, footer a:active, footer a:visited{
+html,body { 
+    height:100%; 
+    display: flex;
+    flex-direction: column;
+}
+
+body > * {
+    flex-shrink: 0;
+}
+
+
+footer{
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    font-size: 2vh;
     text-align: center;
     color: white;
     font-family: "DOS";
-    margin-top: auto;
     background-color: #131313;
-    }
+    z-index: 4;
+}
 
 footer sup {
+    font-size: 1.8vh;
     background-color: #f00;
-    border-radius: 3px;
-    padding: 0 2px;
+    border-radius: 4px;
+    padding: 0 0.6vh;
 }
