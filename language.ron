@@ -1,5 +1,0 @@
-(
-    could_not_delete_user_error: "Could not delete user {}.",
-    program_error: "Some internal error has occurred.",
-    wrong_password: "The information provided does not match with any account. (Wrong username or password!)"
-)

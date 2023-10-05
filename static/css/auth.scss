@@ -1,9 +1,30 @@
+
+$color-background:#232323;
+$color-brighter:#F8F8F8;
+$color-bright:#E2E2E2;
+$color-mid: #A7A7A7;
+$color-dark-1:#202020;
+$color-dark-2:#272727;
+
 $blue: #619eb8;
 $blue-darker: #467285;
 $shark-dark: #2f3538;
 $shark-pink: #eac7c7;
 $darker-white: #dee2e6;
 
+@import "../3rdparty/bootstrap-5.3.2/scss/functions";
+@import "../3rdparty/bootstrap-5.3.2/scss/variables";
+@import "../3rdparty/bootstrap-5.3.2/scss/mixins";
+
+@import "../3rdparty/bootstrap-5.3.2/scss/reboot";
+@import "../3rdparty/bootstrap-5.3.2/scss/type";
+@import "../3rdparty/bootstrap-5.3.2/scss/images";
+@import "../3rdparty/bootstrap-5.3.2/scss/buttons";
+@import "../3rdparty/bootstrap-5.3.2/scss/button-group";
+@import "../3rdparty/bootstrap-5.3.2/scss/nav";
+@import "../3rdparty/bootstrap-5.3.2/scss/navbar";
+@import "../3rdparty/bootstrap-5.3.2/scss/offcanvas";
+@import "../3rdparty/bootstrap-5.3.2/scss/bootstrap.scss";
 
 @media all{
     html,body {
@@ -35,24 +56,13 @@ $darker-white: #dee2e6;
 }
 
 .btn-primary{
-    font-weight: bolder ;
     border-width: 2px;
     border-color: $shark-dark;
-    color: $shark-dark;
-    background-color: $blue ;
-}
-.btn-primary:hover{
-    color: white;
-    background-color: $blue-darker;
 }
 
 .form-signin {
   max-width: 330px;
   padding: 1rem;
-}
-
-.form-signin .form-floating:focus-within {
-  z-index: 2;
 }
 
 .form-signin input[type="text"] {
@@ -72,62 +82,3 @@ $darker-white: #dee2e6;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
-/*
-#error{
-    color: white;
-    margin-top: 10px;
-    background-color: #dc143c;
-    padding: 10px;
-    border-radius: 10px;
-    border-style: solid;
-    border-color: #a60e2c;
-    border-width: 0 0 5px 0;
-    font-size: large;
-    border-radius: 0 20px 3px 20px;
-}
-#error::before{
-    font-size: xx-large;
-content: "⚠️"
-
-label{font-weight: bolder;}
-h5{font-weight: 100;}
-h1, h4,h5{text-align: center;}
-input{
-    background-color: white;
-}
-html{
-    background-color: crimson;
-}
-body{
-    margin: 10px auto 10px auto;
-    height: 90%;
-    width: 80%;
-    border-radius: 30px;
-    background-color: white;
-    border: 3px solid black;
-    padding: 20px;
-    font-family: fantasy;
-}
-form{
-    margin: 0 auto; 
-    width:250px;
-}
-input, button{
-    width: 100%;
-}
-button{
-    color: white;
-    margin-top: 10px;
-    background-color: #dc143c;
-    padding: 10px;
-    border-radius: 10px;
-    border-style: solid;
-    border-color: #a60e2c;
-    border-width: 0 0 5px 0;
-}
-button:active{
-    background-color: #a60e2c;
-    border-color: #dc143c;
-}
-;}
-*/

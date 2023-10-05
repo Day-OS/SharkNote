@@ -5,18 +5,21 @@
 //#[path ="database_handlers/pages.rs"]
 //mod content;
 //mod language_file;
+mod authentication;
 mod configuration;
 mod editor;
 pub mod pages;
 pub mod users;
 
 mod catchers;
-use pages::page::Page;
-use pages::*;
+
+use pages::Permission;
 use rocket::config::LogLevel;
 use rocket::fairing::{self, AdHoc};
 use rocket::figment::providers::{Env, Format, Serialized, Toml};
-use rocket::{catchers, Build, Rocket};
+use rocket::fs::NamedFile;
+use rocket::response::status::NotFound;
+use rocket::{catchers, get, tokio, Build, Rocket};
 use rocket::{
     fs::{relative, FileServer},
     launch, routes,
@@ -27,9 +30,11 @@ use simplelog::{
     ColorChoice, CombinedLogger, Config, LevelFilter, TermLogger, TerminalMode, WriteLogger,
 };
 use std::fs::File;
+use std::path::PathBuf;
 use std::time::Duration;
+use users::user;
 //use users::user::{ User, self};
-use rocket_db_pools::{sqlx, Database};
+use rocket_db_pools::{sqlx, Connection, Database};
 use std::convert::Infallible;
 
 use rocket::{
@@ -61,6 +66,23 @@ async fn database_startup(rocket: Rocket<Build>) -> fairing::Result {
             .execute(&db.0)
             .await
             .unwrap();
+        let connection = &mut db.0.acquire().await.unwrap();
+
+        let user = user::User::new(
+            connection,
+            "dayos".to_owned(),
+            "1234".to_owned(),
+            "daniela.paladinof@gmail.com".to_owned(),
+            user::UserAccountStatus::Normal,
+        )
+        .await
+        .unwrap();
+        let page = pages::page::Page::new(connection, "page_debug".to_string(), None)
+            .await
+            .unwrap();
+        page.set_collaborator(connection, &user, Permission::Owner)
+            .await
+            .unwrap();
         Ok(rocket)
     } else {
         Err(rocket)
@@ -84,7 +106,10 @@ fn rocket() -> _ {
     ])
     .unwrap();
 
-    _ = std::fs::remove_file("/home/ubuntu/DEV/daytheipc-com/db.sqlite");
+    //REMOVE AFTER DEBUG VVVV
+    _ = std::fs::remove_file("/home/ubuntu/DEV/daytheipc-com/data/db.sqlite");
+    _ = std::fs::remove_dir_all("/home/ubuntu/DEV/daytheipc-com/data/page_debug/");
+    //^^^
 
     let store: SessionStore<String> = SessionStore {
         store: Box::new(MemoryStore::default()),
@@ -105,23 +130,42 @@ fn rocket() -> _ {
         .merge(Toml::file("configuration.toml").nested())
         .merge(("log_level", LogLevel::Critical));
     rocket::custom(figment)
-        .register("/", catchers![catchers::not_found])
+        .register("/", catchers![catchers::not_found, catchers::not_authorized, catchers::internal_error])
+        //built in no tworking
+        //.mount("/static", FileServer::from(relative!("static")))
         .mount(
             "/",
             routes![
-                pages::preview,
-                users::authentication::login,
-                users::authentication::register,
-                users::authentication::auth_page,
-                users::authentication::confirmation,
+                get_file,
+                pages::dir::get_dir_contents,
+                pages::get_file,
+                authentication::page,
+                authentication::password_reset::page,
+                authentication::password_reset::post,
+                authentication::password_reset::confirmation,
+                authentication::login::post,
+                authentication::login::confirmation,
+                authentication::register::post,
+                authentication::register::confirmation,
+                authentication::register::check,
                 editor::editor,
             ],
         )
-        .mount("/static", FileServer::from(relative!("static")))
         .attach(AdHoc::config::<configuration::SharkNoteConfig>())
         .attach(DATABASE::init())
         .attach(rocket_recaptcha_v3::ReCaptcha::fairing())
         .attach(AdHoc::try_on_ignite("Database Startup", database_startup))
         .attach(store.fairing())
         .attach(Template::fairing())
+}
+
+//.manage(authentication::AuthBuffer::new())
+//NOT WORKING BECAUSE IT CONFLICTS WITH page::get_file
+#[get("/static/<path..>")]
+pub async fn get_file(path: PathBuf) -> Result<NamedFile, NotFound<String>> {
+    let mut _path = PathBuf::from("static");
+    _path.push(path);
+    NamedFile::open(_path)
+        .await
+        .map_err(|_: std::io::Error| NotFound("File not found".into()))
 }

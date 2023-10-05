@@ -2,17 +2,84 @@
 //@use 'dropdown.scss';
 //@use 'filetypes.scss';
 
+
+
 $color-background:#232323;
 $color-brighter:#F8F8F8;
 $color-bright:#E2E2E2;
 $color-mid: #A7A7A7;
 $color-dark-1:#202020;
 $color-dark-2:#272727;
+$gray-900: $color-dark-2;
+$blue: #619eb8;
+$blue-darker: #467285;
+$shark-dark: #2f3538;
+$shark-pink: #eac7c7;
+$darker-white: #dee2e6;
+$body-bg:$color-dark-1;
+$modal-content-color: $color-brighter;
+$modal-content-bg: $body-bg; 
+$enable-grid-classes: 'fa'lse;
+$enable-cssgrid: true;
+$offcanvas-horizontal-width: 80%;
+
+@import "../3rdparty/bootstrap-5.3.2/scss/functions";
+@import "../3rdparty/bootstrap-5.3.2/scss/variables";
+@import "../3rdparty/bootstrap-5.3.2/scss/variables-dark";
+@import "../3rdparty/bootstrap-5.3.2/scss/maps";
+@import "../3rdparty/bootstrap-5.3.2/scss/mixins";
+@import "../3rdparty/bootstrap-5.3.2/scss/utilities";
+@import "../3rdparty/bootstrap-5.3.2/scss/root";
+@import "../3rdparty/bootstrap-5.3.2/scss/reboot";
+@import "../3rdparty/bootstrap-5.3.2/scss/type";
+@import "../3rdparty/bootstrap-5.3.2/scss/images";
+@import "../3rdparty/bootstrap-5.3.2/scss/containers";
+@import "../3rdparty/bootstrap-5.3.2/scss/grid";
+@import "../3rdparty/bootstrap-5.3.2/scss/tables";
+@import "../3rdparty/bootstrap-5.3.2/scss/forms";
+@import "../3rdparty/bootstrap-5.3.2/scss/buttons";
+//@import "../3rdparty/bootstrap-5.3.2/scss/transitions";
+@import "../3rdparty/bootstrap-5.3.2/scss/dropdown";
+//@import "../3rdparty/bootstrap-5.3.2/scss/button-group";
+@import "../3rdparty/bootstrap-5.3.2/scss/nav";
+@import "../3rdparty/bootstrap-5.3.2/scss/navbar";
+@import "../3rdparty/bootstrap-5.3.2/scss/card";
+///@import "../3rdparty/bootstrap-5.3.2/scss/accordion";
+//@import "../3rdparty/bootstrap-5.3.2/scss/breadcrumb";
+//@import "../3rdparty/bootstrap-5.3.2/scss/pagination";
+//@import "../3rdparty/bootstrap-5.3.2/scss/badge";
+//@import "../3rdparty/bootstrap-5.3.2/scss/alert";
+//@import "../3rdparty/bootstrap-5.3.2/scss/progress";
+//@import "../3rdparty/bootstrap-5.3.2/scss/list-group";
+@import "../3rdparty/bootstrap-5.3.2/scss/close";
+//@import "../3rdparty/bootstrap-5.3.2/scss/toasts";
+@import "../3rdparty/bootstrap-5.3.2/scss/modal";
+//@import "../3rdparty/bootstrap-5.3.2/scss/tooltip";
+//@import "../3rdparty/bootstrap-5.3.2/scss/popover";
+//@import "../3rdparty/bootstrap-5.3.2/scss/carousel";
+//@import "../3rdparty/bootstrap-5.3.2/scss/spinners";
+@import "../3rdparty/bootstrap-5.3.2/scss/offcanvas";
+//@import "../3rdparty/bootstrap-5.3.2/scss/placeholders";
+//@import "../3rdparty/bootstrap-5.3.2/scss/helpers";
+@import "../3rdparty/bootstrap-5.3.2/scss/utilities/api";
+
 
 $size-navbar: 8vh;
 $size-footer: 4vh;
 $size-middle: 88vh;
 
+.small-middle-container{
+	margin: auto;
+	width: 40%;
+}
+
+#editor{
+  position: absolute; /* Added */
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+}
 
 .nav-link.active {
   
@@ -27,24 +94,43 @@ $size-middle: 88vh;
   background-color: $color-dark-2 !important;
   color: $color-brighter !important;
 }
-button i{
-  color: $color-dark-2 !important;
-}
 .nav-link i {
   color: $color-brighter !important;
   
 }
 
 body{
-    background-color:$color-dark-1;
+    background-color:$body-bg;
 }
+
 .navbar{
   padding-left: 10px;
   padding-right: 10px;
 }
 
+.offcanvas{
+  background-color: $color-background;
+}
+@media only screen and (max-width: 600px) {
+  #fileoffcanvasScrolling{
+    width: 100vh !important;
+  }
+}
 
 #code *, #preview *{
   height: 100vh;
   width: 100vw;
+}
+
+.file-list {
+  *{
+    color: $darker-white;
+  }
+  .card-img-top {
+    text-align: center;
+    font-size: 10vh;
+  }
+  .smallbtn{
+    width: 40px;
+  }
 }

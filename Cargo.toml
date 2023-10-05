@@ -6,27 +6,27 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rocket_cors = "0.5.1"
-markdown-it = "0.4.0"
 rocket = { version = "=0.5.0-rc.3", features = ["secrets", "json"] }
+rocket-session-store = "0.2.0"
+rocket_dyn_templates = {version = "0.1.0-rc.3", features = ["handlebars", "tera"]}
+rocket_cors = "0.5.1"
+rocket_http = "0.4.11"
+rocket-recaptcha-v3 = "0.3.2"
+markdown-it = "0.4.0"
 html_editor = "0.5.2"
 unidecode = "0.3.0"
 serde_json = "1.0.95"
 serde = { version = "1", features = ["derive"] }
 dirs = "5.0.0"
 inquire = "0.6.0"
-rocket-session-store = "0.2.0"
-rocket_dyn_templates = {version = "0.1.0-rc.3", features = ["handlebars", "tera"]}
 walkdir = "2.3.3"
 filetime = "0.2.21"
 simplelog = "0.12.1"
 log = "0.4.20"
 sha256 = "1.4.0"
-rocket_http = "0.4.11"
 lettre = "0.10.4"
 totp-rs = "5.2.0"
 toml = "0.7.6"
-rocket-recaptcha-v3 = "0.3.2"
 strfmt = "0.2.4"
 rand = "0.8.5"
 

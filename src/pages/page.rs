@@ -1,25 +1,34 @@
 use crate::users::user::User;
 
+use rocket::tokio;
 //use crate::users::user::User;
 use rocket_db_pools::sqlx;
+use serde::Serialize;
 use sqlx::Sqlite;
 
-#[derive(sqlx::FromRow)]
+use super::PageStatus;
+
+#[derive(sqlx::FromRow, Serialize)]
 pub struct Page {
     pub page_id: String,
-    pub page_display_name: String,
-    pub b_is_archived: bool,
+    pub status: PageStatus,
 }
 
 impl Page {
     pub async fn new(
         connection: &mut sqlx::pool::PoolConnection<Sqlite>,
         page_id: String,
-        page_display_name: Option<String>,
+        page_status: Option<PageStatus>,
     ) -> Result<Page, sqlx::Error> {
-        let page = sqlx::query_as::<_, Page>("INSERT INTO page (page_id, page_display_name, b_is_archived) VALUES (?1, ?2, 0) RETURNING *;")
-        .bind(page_id)
-        .bind(page_display_name)
+        tokio::fs::create_dir_all(format!("data/{}", page_id))
+            .await
+            .unwrap();
+        let page_status = page_status.unwrap_or(PageStatus::Private);
+        let page = sqlx::query_as::<_, Page>(
+            "INSERT INTO page (page_id, status) VALUES (?1, ?2) RETURNING *;",
+        )
+        .bind(page_id.to_lowercase())
+        .bind(page_status)
         .fetch_one(connection)
         .await?;
         Ok(page)
@@ -41,20 +50,22 @@ impl Page {
         page_id: String,
     ) -> Result<Page, sqlx::Error> {
         let page = sqlx::query_as::<_, Page>("SELECT * FROM page where page_id = ?1")
-            .bind(page_id)
+            .bind(page_id.to_lowercase())
             .fetch_one(connection)
             .await?;
         Ok(page)
     }
 
-    pub async fn set_owner(
+    pub async fn set_collaborator(
         self: &Self,
         connection: &mut sqlx::pool::PoolConnection<Sqlite>,
         user: &User,
+        permission: super::Permission,
     ) -> Result<(), sqlx::Error> {
-        sqlx::query("INSERT INTO page_user (page_id, user_id) VALUES (?1, ?2)")
+        sqlx::query("INSERT INTO page_user (page_id, user_id, permission) VALUES (?1, ?2 ,?3)")
             .bind(self.page_id.clone())
             .bind(user.user_id.clone())
+            .bind(permission)
             .execute(connection)
             .await?;
         Ok(())
@@ -71,24 +82,29 @@ impl Page {
         Ok(())
     }
 
-    pub async fn get_owner(
+    pub async fn get_colaborators(
         self: &Self,
         connection: &mut sqlx::pool::PoolConnection<Sqlite>,
-    ) -> Result<User, sqlx::Error> {
+    ) -> Result<Vec<User>, sqlx::Error> {
         let user = sqlx::query_as::<_, User>("SELECT * FROM user where user_id in (SELECT user_id FROM page_user WHERE page_id = ?1)")
             .bind(self.page_id.clone())
-            .fetch_one(connection)
+            .fetch_all(connection)
             .await?;
         Ok(user)
     }
 
-    pub async fn check_if_user_is_owner(
+    pub async fn check_if_user_is_colaborator(
         self: &Self,
         connection: &mut sqlx::pool::PoolConnection<Sqlite>,
         user: User,
     ) -> Result<bool, sqlx::Error> {
-        let owner = self.get_owner(connection).await?;
-        Ok(user.user_id == owner.user_id)
+        let users = self.get_colaborators(connection).await?;
+        for cur_user in users{
+            if user.user_id == cur_user.user_id {
+                return Ok(true);
+            }
+        }
+        Ok(false)
     }
 }
 

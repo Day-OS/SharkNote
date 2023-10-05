@@ -1,0 +1,12 @@
+{% extends "error/base" %}
+
+{% block head %}
+  {% set title = "Not found"%}
+  {{ super() }}
+{% endblock head %}
+{% block body %}
+  {% set image = "/static/blobhaj/Blobhaj_Mlem.svg"%}
+  {% set title_content = "Someone slipped in the cables!" %}
+  {% set subtitle_content = "Ooopsy..." %}
+  {{super()}}
+{% endblock body %}

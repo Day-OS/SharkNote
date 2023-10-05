@@ -1,0 +1,12 @@
+{% extends "error/base" %}
+
+{% block head %}
+  {% set title = "No permission"%}
+  {{ super() }}
+{% endblock head %}
+{% block body %}
+  {% set image = "/static/blobhaj/Blobhaj_Glare.svg"%}
+  {% set title_content = "HEY! What are you doing here?" %}
+  {% set subtitle_content = "You don't have permission to access this page!" %}
+  {{super()}}
+{% endblock body %}
