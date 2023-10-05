@@ -5,3 +5,4 @@ Cargo.lock
 /static/css/*.css.map
 configuration.toml
 data/*
+*.log
