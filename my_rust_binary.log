@@ -5051,3 +5051,68 @@
 02:34:34 [ERROR] No matching routes for [32mGET[0m [34m/[0m [33mtext[0m[33m/[0m[33mhtml[0m.
 02:34:34 [WARN] Responding with registered [36m([0m[37mnot_found[0m[36m)[0m [34m404[0m catcher.
 02:34:34 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] Change detected: reloading templates.
+03:02:13 [INFO] [32mGET[0m [34m/editor?page_id=page_debug[0m [33mtext[0m[33m/[0m[33mhtml[0m:
+03:02:13 [INFO] Matched: [36m([0m[37meditor[0m[36m)[0m [32mGET[0m [34m/editor?<page_id>[0m
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mGET[0m [34m/static/3rdparty/css/reset.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+03:02:13 [INFO] Matched: [36m([0m[37mget_file[0m[36m)[0m [32mGET[0m [34m/static/<path..>[0m
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mGET[0m [34m/static/3rdparty/js/ace.js[0m:
+03:02:13 [INFO] Matched: [36m([0m[37mget_file[0m[36m)[0m [32mGET[0m [34m/static/<path..>[0m
+03:02:13 [INFO] [32mGET[0m [34m/static/3rdparty/js/mode-markdown.js[0m:
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] Matched: [36m([0m[37mget_file[0m[36m)[0m [32mGET[0m [34m/static/<path..>[0m
+03:02:13 [INFO] [32mGET[0m [34m/static/3rdparty/bootstrap-5.3.2/dist/js/bootstrap.min.js[0m:
+03:02:13 [INFO] [32mGET[0m [34m/static/css/editor.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+03:02:13 [INFO] Matched: [36m([0m[37mget_file[0m[36m)[0m [32mGET[0m [34m/static/<path..>[0m
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] Matched: [36m([0m[37mget_file[0m[36m)[0m [32mGET[0m [34m/static/<path..>[0m
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] [32mGET[0m [34m/static/editor.js[0m:
+03:02:13 [INFO] [32mGET[0m [34m/static/css/base.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] Matched: [36m([0m[37mget_file[0m[36m)[0m [32mGET[0m [34m/static/<path..>[0m
+03:02:13 [INFO] Matched: [36m([0m[37mget_file[0m[36m)[0m [32mGET[0m [34m/static/<path..>[0m
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mGET[0m [34m/static/page_selection.js[0m:
+03:02:13 [INFO] Matched: [36m([0m[37mget_file[0m[36m)[0m [32mGET[0m [34m/static/<path..>[0m
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mGET[0m [34m/auth[0m [33mtext[0m[33m/[0m[33mhtml[0m:
+03:02:13 [INFO] Matched: [36m([0m[37mpage[0m[36m)[0m [32mGET[0m [34m/auth[0m
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mGET[0m [34m/static/3rdparty/js/theme-twilight.js[0m:
+03:02:13 [INFO] Matched: [36m([0m[37mget_file[0m[36m)[0m [32mGET[0m [34m/static/<path..>[0m
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mGET[0m [34m/static/3rdparty/css/reset.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+03:02:13 [INFO] [32mGET[0m [34m/static/css/base.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+03:02:13 [INFO] Matched: [36m([0m[37mget_file[0m[36m)[0m [32mGET[0m [34m/static/<path..>[0m
+03:02:13 [INFO] Matched: [36m([0m[37mget_file[0m[36m)[0m [32mGET[0m [34m/static/<path..>[0m
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mGET[0m [34m/static/css/auth.css[0m [33mtext[0m[33m/[0m[33mcss[0m:
+03:02:13 [INFO] Matched: [36m([0m[37mget_file[0m[36m)[0m [32mGET[0m [34m/static/<path..>[0m
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:02:13 [INFO] [32mGET[0m [34m/static/logo.svg[0m [33mimage[0m[33m/[0m[33mavif[0m:
+03:02:13 [INFO] Matched: [36m([0m[37mget_file[0m[36m)[0m [32mGET[0m [34m/static/<path..>[0m
+03:02:13 [INFO] [1;49;39mOutcome:[0m [49;32mSuccess[0m
+03:02:13 [INFO] [32mResponse succeeded.[0m
+03:04:50 [INFO] [32mGET[0m [34m/[0m:
+03:04:50 [ERROR] No matching routes for [32mGET[0m [34m/[0m.
+03:04:50 [WARN] Responding with registered [36m([0m[37mnot_found[0m[36m)[0m [34m404[0m catcher.
+03:04:50 [INFO] [32mResponse succeeded.[0m

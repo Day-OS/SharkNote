@@ -15,7 +15,7 @@
     {% block body %}
     {% endblock body %}
     <footer>
-      2023 DaytheIPC<sup>NOT A TM</sup> - <a href="https://srv.daytheipc.com/wtfpl.txt">WTFPL</a>
+      2023 DaytheIPC<sup>NOT A TM</sup> - <a href="https://github.com/Day-OS/SharkNote">GitHub</a>
     </footer>
 </body>
 </html>
