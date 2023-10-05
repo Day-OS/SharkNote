@@ -1,5 +1,6 @@
 /target
 Cargo.lock
+/static/3rdparty/bootstrap-5.3.2
 /static/css/*.css
 /static/css/*.css.map
 configuration.toml
