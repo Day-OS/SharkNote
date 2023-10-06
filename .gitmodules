@@ -1,3 +1,9 @@
 [submodule "bootstrap"]
 	path = static/3rdparty/bootstrap
 	url = https://github.com/twbs/bootstrap
+[submodule "ace"]
+	path = static/3rdparty/ace
+	url = https://github.com/ajaxorg/ace
+[submodule "bootstrap-icons"]
+	path = static/3rdparty/bootstrap-icons
+	url = https://github.com/twbs/icons

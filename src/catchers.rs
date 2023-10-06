@@ -1,5 +1,5 @@
-use rocket::{catch, response::content::RawHtml, http::Status};
-use rocket_dyn_templates::{Template, context};
+use rocket::{catch, http::Status, response::content::RawHtml};
+use rocket_dyn_templates::{context, Template};
 
 #[catch(404)]
 pub fn not_found() -> Template {

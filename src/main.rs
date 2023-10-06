@@ -91,6 +91,12 @@ async fn database_startup(rocket: Rocket<Build>) -> fairing::Result {
 
 #[launch]
 fn rocket() -> _ {
+    if let Err(e) = std::process::Command::new("git")
+    .args(["submodule", "update", "--init", "--recursive"])
+    .output() {
+        panic!("Something went wrong when downloading submodules! {}", e)
+    }
+    ;
     CombinedLogger::init(vec![
         TermLogger::new(
             LevelFilter::Info,
@@ -130,15 +136,22 @@ fn rocket() -> _ {
         .merge(Toml::file("configuration.toml").nested())
         .merge(("log_level", LogLevel::Critical));
     rocket::custom(figment)
-        .register("/", catchers![catchers::not_found, catchers::not_authorized, catchers::internal_error])
+        .register(
+            "/",
+            catchers![
+                catchers::not_found,
+                catchers::not_authorized,
+                catchers::internal_error
+            ],
+        )
         //built in no tworking
         //.mount("/static", FileServer::from(relative!("static")))
         .mount(
             "/",
             routes![
                 get_file,
-                pages::dir::get_dir_contents,
-                pages::get_file,
+                pages::files::get_dir_contents,
+                pages::files::get_file,
                 authentication::page,
                 authentication::password_reset::page,
                 authentication::password_reset::post,

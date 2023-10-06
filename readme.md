@@ -3,6 +3,7 @@
 [![Rust Badge](https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org/)
 [![Rocket Homepage](https://img.shields.io/badge/web-rocket.rs-red.svg?style=for-the-badge&label=https&colorB=d33847)](https://rocket.rs)
 [![TeraHTML](https://img.shields.io/badge/tera-red.svg?style=for-the-badge&colorB=df6563&logoColor=white&logo=html5)](https://keats.github.io/tera/)
+![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
 
 ![Javascript](https://img.shields.io/badge/JavaScript-000000?style=for-the-badge&logo=javascript&logoColor=white) 
 [![Bootstrap]( https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)

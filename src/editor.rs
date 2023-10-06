@@ -28,9 +28,13 @@ pub async fn editor(
     page_id: Option<&str>,
 ) -> Result<Template, Redirect> {
     //TEMPORARY FOR TESTS
-    SessionCookie::set(&session, SessionCookie::LoggedIn {
-        user_id: "dayos".into(),
-    }).await;
+    SessionCookie::set(
+        &session,
+        SessionCookie::LoggedIn {
+            user_id: "dayos".into(),
+        },
+    )
+    .await;
     let returnal_error = Redirect::to("/");
     if let SessionCookie::LoggedIn { user_id } = SessionCookie::get(&session).await {
         let user = users::user::User::get(&mut *connection, user_id.clone())

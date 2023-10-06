@@ -1,14 +1,12 @@
-const PAGE_SELECTED = new URLSearchParams(window.location.search).get('page_id');
-const PARSER = new DOMParser();
-
-class DirVisualizer {
+export class DirVisualizer {
     /**
      * @param {Directory} root 
      * @param {String} pointer 
      */
-    constructor(root = new Directory(""), pointer = ""){
+    constructor(PAGE_SELECTED, root = new Directory(""), pointer = ""){
         this.root = root;
         this.pointer = pointer;
+        this.PAGE_SELECTED = PAGE_SELECTED;
     }
     /**
      * @returns {String}
@@ -53,7 +51,7 @@ class DirVisualizer {
     }
     async update(){
         console.log(this.pointer);
-        let response = await fetch(`dir/${PAGE_SELECTED}`, {
+        let response = await fetch(`dir/${this.PAGE_SELECTED}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json'
@@ -116,8 +114,7 @@ class DirVisualizer {
         body.append(grid);
     }
 }
-
-class Directory {
+export class Directory {
     /**
      * @param {String} name 
      * @param {File[]} files 
@@ -129,7 +126,7 @@ class Directory {
         this.directories = directories;
     }
 }
-class File {
+export class File {
     /**
      * @param {String} name 
      */
@@ -137,59 +134,29 @@ class File {
         this.name = name;
     }
 }
-const dir = new DirVisualizer();
 
-/**
- * Get files content and sends it to the editor
- * @param {String} path 
- */
-async function open_file(path){
-    let response = await fetch(`${PAGE_SELECTED}${path}`, {
-        method: 'GET',
-        headers: {
-        },
-    });
-    bootstrap.Modal.getInstance('#file-modal').hide();
-    ace.edit("editor").setValue(await response.text());
-}
-
-/**
- * Sends confirmation Modal
- * @param {String} name 
- * @param {String} path 
- */
-function delete_from_path(name, path){
-    let modal = $("#delete-modal")
-    modal.find(".file-name").html(name)
-    modal.find(".delete").click(()=>{
-        delete_from_path_conf(path)
-        modal.modal("hide")
-    })
-    modal.modal("show");
+export class CreationReq{
+    constructor(dir_path, new_name){
+        this.dir_path = path;
+        this.new_name = new_name;
+    }
 }
 /**
- * Sends confirmation Modal
- * @param {String} path 
+ * Used to delete send the POST Request for file re-nomination
+ * Insert the path to the in it. A file or a directory
  */
-function delete_from_path_conf(path){
-    alert(`apagoukk ${path}`)
+export class RenominationReq{
+    constructor(path, new_name){
+        this.path = path;
+        this.new_name = new_name;
+    }
 }
-
-document.addEventListener('DOMContentLoaded', () =>{
-    //https://ace.c9.io/#nav=howto
-    const editor = ace.edit("editor");
-    editor.commands.addCommand({
-        name: 'save',
-        bindKey: { win: "Ctrl-S", "mac": "Cmd-S" },
-        exec: function (editor) {
-            console.log("saving", editor.session.getValue());
-        }
-    });
-    editor.resize();
-    editor.setTheme("ace/theme/twilight");
-    editor.session.setMode("ace/mode/markdown");
-
-    document.getElementById('file-modal').addEventListener('show.bs.modal', (evt) => {dir.update()})
-
-    
-}, false);
+/**
+ * Used to delete send the POST Request for file deletion
+ * Insert the path to the in it. A file or a directory
+ */
+export class DeletionReq{
+    constructor(path){
+        this.path = path;
+    }
+}

@@ -99,7 +99,7 @@ impl Page {
         user: User,
     ) -> Result<bool, sqlx::Error> {
         let users = self.get_colaborators(connection).await?;
-        for cur_user in users{
+        for cur_user in users {
             if user.user_id == cur_user.user_id {
                 return Ok(true);
             }
