@@ -19,9 +19,8 @@ use rocket::fairing::{self, AdHoc};
 use rocket::figment::providers::{Env, Format, Serialized, Toml};
 use rocket::fs::NamedFile;
 use rocket::response::status::NotFound;
-use rocket::{catchers, get, tokio, Build, Rocket};
+use rocket::{catchers, get, Build, Rocket};
 use rocket::{
-    fs::{relative, FileServer},
     launch, routes,
 };
 use rocket_dyn_templates::Template;
@@ -34,7 +33,7 @@ use std::path::PathBuf;
 use std::time::Duration;
 use users::user;
 //use users::user::{ User, self};
-use rocket_db_pools::{sqlx, Connection, Database};
+use rocket_db_pools::{sqlx, Database};
 use std::convert::Infallible;
 
 use rocket::{
@@ -152,6 +151,7 @@ fn rocket() -> _ {
                 get_file,
                 pages::files::get_dir_contents,
                 pages::files::get_file,
+                pages::files::write_file,
                 authentication::page,
                 authentication::password_reset::page,
                 authentication::password_reset::post,

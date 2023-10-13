@@ -3,7 +3,6 @@
 //@use 'filetypes.scss';
 
 
-
 $color-background:#232323;
 $color-brighter:#F8F8F8;
 $color-bright:#E2E2E2;
@@ -16,12 +15,17 @@ $blue-darker: #467285;
 $shark-dark: #2f3538;
 $shark-pink: #eac7c7;
 $darker-white: #dee2e6;
+$toast-header-color:  $color-bright;  
+$toast-color: $color-bright;  
 $body-bg:$color-dark-1;
 $modal-content-color: $color-brighter;
 $modal-content-bg: $body-bg; 
-$enable-grid-classes: 'fa'lse;
+$enable-grid-classes: false;
 $enable-cssgrid: true;
 $offcanvas-horizontal-width: 80%;
+
+
+
 
 @import "../3rdparty/bootstrap/scss/functions";
 @import "../3rdparty/bootstrap/scss/variables";
@@ -38,7 +42,7 @@ $offcanvas-horizontal-width: 80%;
 @import "../3rdparty/bootstrap/scss/tables";
 @import "../3rdparty/bootstrap/scss/forms";
 @import "../3rdparty/bootstrap/scss/buttons";
-//@import "../3rdparty/bootstrap/scss/transitions";
+@import "../3rdparty/bootstrap/scss/transitions";
 @import "../3rdparty/bootstrap/scss/dropdown";
 //@import "../3rdparty/bootstrap/scss/button-group";
 @import "../3rdparty/bootstrap/scss/nav";
@@ -52,7 +56,7 @@ $offcanvas-horizontal-width: 80%;
 //@import "../3rdparty/bootstrap/scss/progress";
 //@import "../3rdparty/bootstrap/scss/list-group";
 @import "../3rdparty/bootstrap/scss/close";
-//@import "../3rdparty/bootstrap/scss/toasts";
+@import "../3rdparty/bootstrap/scss/toasts";
 @import "../3rdparty/bootstrap/scss/modal";
 //@import "../3rdparty/bootstrap/scss/tooltip";
 //@import "../3rdparty/bootstrap/scss/popover";
@@ -120,6 +124,12 @@ body{
 #code *, #preview *{
   height: 100vh;
   width: 100vw;
+}
+.form-control{
+  color: $darker-white !important;
+}
+.form-control::placeholder {
+  color: $color-mid !important;
 }
 
 .file-list {

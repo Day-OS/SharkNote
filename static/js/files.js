@@ -135,10 +135,23 @@ export class File {
     }
 }
 
+/**
+ * @enum {String}
+ */
+const Type = {
+    file: "file",
+    dir: "dir",
+}
+
 export class CreationReq{
-    constructor(dir_path, new_name){
-        this.dir_path = path;
-        this.new_name = new_name;
+    /**
+     * 
+     * @param {String} path Path to the new directory or new file to be created
+     * @param {Type} type 
+     */
+    constructor(path, type){
+        this.type = type
+        this.path = path;
     }
 }
 /**
@@ -147,6 +160,7 @@ export class CreationReq{
  */
 export class RenominationReq{
     constructor(path, new_name){
+        this.req_type = type
         this.path = path;
         this.new_name = new_name;
     }
@@ -157,6 +171,7 @@ export class RenominationReq{
  */
 export class DeletionReq{
     constructor(path){
+        this.type = type
         this.path = path;
     }
 }

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="static/css/editor.css">
     <script src="/static/3rdparty/js/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="/static/3rdparty/js/mode-markdown.js"></script>
-    <script src="/static/page_selection.js"></script>
+    <script src="/static/js/page_selection.js"></script>
 
 
 {% endblock head %}

@@ -5,8 +5,6 @@
     <link rel="stylesheet" href="static/3rdparty/bootstrap-icons/font/bootstrap-icons.css">
     
     <script src="/static/3rdparty/bootstrap/dist/js/bootstrap.min.js"></script>
-    
-    
     <link rel="stylesheet" href="static/css/editor.css">
     <script src="/static/3rdparty/ace/build/src-min/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="/static/3rdparty/ace/build/src-min/mode-markdown.js"></script>
@@ -14,7 +12,8 @@
     <script src="/static/3rdparty/ace/build/src-min/mode-sass.js"></script>
     <script src="/static/3rdparty/ace/build/src-min/mode-css.js"></script>
     <script src="/static/3rdparty/ace/build/src-min/mode-toml.js"></script>
-    <script type="module" src="/static/js/editor.js"></script>
+    <script type="module" src="/static/js/editor/index.js"></script>
+    <script type="module" src="/static/js/editor/notifications.js"></script>
     <script src="/static/js/page_selection.js"></script>
     <template id="file-grid">
       <div class="grid text-center file-list" style="--bs-gap: .25rem 1rem;"></div>
@@ -61,6 +60,19 @@
             <h5 class="card-title">Go back</h5>
         </div>
     </div>
+    </template>
+    <template id="notification-template">
+      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" >
+        <div class="toast-header">
+          <img src="..." class="rounded me-2" alt="...">
+          <strong class="me-auto">Bootstrap</strong>
+          <small>11 mins ago</small>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          Hello, world! This is a toast message.
+        </div>
+      </div>
     </template>
 
 
@@ -162,6 +174,83 @@
       </div>
     </div>
   </div>
+</div>
+
+<div id="dir-creation-modal" class="modal modal-lg fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Directory Creation</h5>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="d-flex flex-sm-row flex-column" style="--bs-columns: 4; --bs-gap: 1rem;">
+            <div class="flex-grow-1 flex-fill m-2 p-3 border border-0 bg-dark  rounded  g-col-4 g-col-md-2">       
+              <label for="dirName" class="form-label ">Insert a name for the directory</label>
+              <div class="input-group">
+                <span class="input-group-text" id="basic-addon1"></span>
+                <input id="dirName" type="text" class="form-control is-invalid" placeholder="dirname" aria-label="" aria-describedby="">
+                  <div class="invalid-feedback">
+                    Make it sure the directory name is valid.
+                  </div>  
+              </div>   
+            </div>
+          </div>
+          <div class="p-2">
+            <button id="create-dir-button" class="btn btn-primary w-100" type="button">Create</button>
+          </div>
+        </form>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="file-creation-modal" class="modal modal-lg fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">File Creation</h5>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="d-flex flex-sm-row flex-column" style="--bs-columns: 4; --bs-gap: 1rem;">
+            <div class="flex-grow-1 flex-fill m-2 p-3 border border-0 bg-dark  rounded  g-col-4 g-col-md-2">       
+              <label for="fileName" class="form-label ">Insert a name for the file</label>
+              <div class="input-group">
+                <span class="input-group-text" id="basic-addon1"></span>
+                <input id="fileName" type="text" class="form-control is-invalid" placeholder="file.extension" aria-label="" aria-describedby="">
+                  <div class="invalid-feedback">
+                    Make it sure the file name is valid.
+                  </div>  
+              </div>   
+            </div>
+            <div class="m-2 p-3 d-flex border rounded border-0  bg-dark g-col-4 g-col-md-2">
+              <div class="align-self-center flex-fill justify-content-center overflow-hidden">
+                <label for="fileUpload" class="form-label ">Or upload a file</label>
+                <input class="form-control" type="file" multiple id="fileUpload">
+                <input class="form-control" type="reset" id="fileUploadRemove">
+              </div>
+            </div>
+          </div>
+          <div class="p-2">
+            <button id="create-file-button" class="btn btn-primary w-100" type="button">Create</button>
+          </div>
+        </form>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="notification-container" class="toast-container bottom-0 end-0">
+        
 </div>
 
   

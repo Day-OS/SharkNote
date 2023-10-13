@@ -1,13 +1,7 @@
-use std::path::PathBuf;
 
-use rocket::{
-    fs::NamedFile,
-    get,
-    http::Status,
-    response::{content::RawHtml, status::NotFound},
-    tokio::fs,
-};
-use rocket_db_pools::Connection;
+
+
+
 use serde::Serialize;
 
 pub mod files;
@@ -15,11 +9,15 @@ pub mod page;
 
 #[derive(sqlx::Type)]
 pub enum Permission {
-    Owner, //Can delete page and all permissions bellow.
-    Admin, //Can create and modify articles and the permission bellow.
-    Mod,   //Can delete comments.
-    PrivateViewer, //This exists only if the page is set to Private.
-           //only those who are invited and have the necessary permissions can access the page.
+    ///Can delete page and all permissions bellow.
+    Owner, 
+    ///Can create and modify articles and the permission bellow.
+    Admin, 
+    ///Can delete comments.
+    Mod,   
+    ///This exists only if the page is set to Private.
+    ///only those who are invited and have the necessary permissions can access the page.
+    PrivateViewer, 
 }
 
 #[derive(sqlx::Type, Serialize)]

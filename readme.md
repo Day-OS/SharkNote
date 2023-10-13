@@ -58,7 +58,8 @@
         - [ ] Tera HTML (https://keats.github.io/tera/docs/)
         - [ ] MarkDown Rendering
             - [ ] Markdown Book (https://github.com/Jeff-Tian/markdown-it-book-plugin)???
-            - [ ] Graphics (https://github.com/geekplux/markvis https://github.com/askanium/rustplotlib)
+            - [ ] SVG Draggable (https://codepen.io/osublake/pen/oGoyYb)
+            - [ ] Graphics (https://crates.io/crates/layout-rs https://github.com/askanium/rustplotlib)
             - [ ] Better tables (https://github.com/redbug312/markdown-it-multimd-table )
             - [ ] Collapsible (https://github.com/Bioruebe/markdown-it-collapsible)
             - [ ] Metadata??? (https://lib.rs/crates/markdown-it-front-matter)
@@ -66,7 +67,7 @@
             - [ ] Container (https://github.com/markdown-it/markdown-it-container)
             - [ ] Heading Anchors (https://github.com/markdown-it-rust/markdown-it-plugins.rs/blob/main/crates/heading_anchors/README.md#options) 
             - [ ] A lot of things (https://marketplace.visualstudio.com/items?itemName=jebbs.markdown-extended#extended-syntaxes)
-    
+        
 
 
 - Useful Stuff

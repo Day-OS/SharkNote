@@ -13,6 +13,13 @@ pub struct Page {
     pub page_id: String,
     pub status: PageStatus,
 }
+#[derive(sqlx::FromRow)]
+pub struct PageUser {
+    pub page_id: String,
+    pub user_id: String,
+    pub permission: super::Permission,
+}
+
 
 impl Page {
     pub async fn new(
@@ -93,23 +100,17 @@ impl Page {
         Ok(user)
     }
 
-    pub async fn check_if_user_is_colaborator(
+    pub async fn get_user_permission(
         self: &Self,
         connection: &mut sqlx::pool::PoolConnection<Sqlite>,
         user: User,
-    ) -> Result<bool, sqlx::Error> {
-        let users = self.get_colaborators(connection).await?;
-        for cur_user in users {
-            if user.user_id == cur_user.user_id {
-                return Ok(true);
-            }
-        }
-        Ok(false)
+    ) -> Result<super::Permission, sqlx::Error> {
+        let relation = sqlx::query_as::<_, PageUser>("SELECT * FROM page_user WHERE page_id = ?1 AND user_id = ?2")
+            .bind(self.page_id.clone())
+            .bind(user.user_id)
+            .fetch_one(connection)
+            .await?;
+        Ok(relation.permission)
     }
 }
 
-#[derive(sqlx::FromRow)]
-pub struct PageUser {
-    pub page_id: String,
-    pub user_id: String,
-}

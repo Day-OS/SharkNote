@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::{
-    authentication::{login::post, SessionCookie},
+    authentication::{SessionCookie},
     pages, users,
 };
 use rocket::{get, response::Redirect, FromForm};
