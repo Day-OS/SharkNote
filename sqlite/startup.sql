@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS page (
 );
 
 
-CREATE TABLE IF NOT EXISTS  page_user (
+CREATE TABLE IF NOT EXISTS  permission (
     page_id TEXT NOT NULL,
     user_id TEXT NOT NULL,
     permission TEXT NOT NULL,

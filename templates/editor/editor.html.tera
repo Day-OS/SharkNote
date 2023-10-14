@@ -13,11 +13,9 @@
     <script src="/static/3rdparty/ace/build/src-min/mode-css.js"></script>
     <script src="/static/3rdparty/ace/build/src-min/mode-toml.js"></script>
     <script type="module" src="/static/js/editor/index.js"></script>
-    <script type="module" src="/static/js/editor/notifications.js"></script>
+    <!-- <script type="module" src="/static/js/editor/notifications.js"></script> -->
     <script src="/static/js/page_selection.js"></script>
-    <template id="file-grid">
-      <div class="grid text-center file-list" style="--bs-gap: .25rem 1rem;"></div>
-    </template>
+    <script src="/static/3rdparty/htmx/dist/htmx.min.js"></script>
     <template id="file">
       <div class="card g-col-6 g-col-md-2" >
         <div class="position-absolute top-0 end-0">
@@ -33,31 +31,6 @@
         <a href="#"><i class="icon bi card-img-top"></i></a>
         <div class="card-body">
             <h5 class="card-title"></h5>
-        </div>
-    </div>
-    </template>
-    <template id="directory">
-      <div class="card g-col-6 g-col-md-2" >
-        <div class="position-absolute top-0 end-0">
-            <button class="btn btn-secondary smallbtn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-gear-fill"></i>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="#" class="rename btn btn-primary w-100">Rename <i class="bi bi-cursor-text"></i></a></li>
-                <li><a href="#" class="delete btn btn-danger w-100">Delete <i class="bi bi-trash3-fill"></i></a></li>
-            </ul>
-        </div>
-        <a href="#"><i class="icon bi bi-folder2 card-img-top"></i></a>
-        <div class="card-body">
-            <h5 class="card-title"></h5>
-        </div>
-    </div>
-    </template>
-    <template id="return">
-      <div class="card g-col-6 g-col-md-2" >
-        <a href="#"><i class="bi bi-arrow-return-left card-img-top"></i></a>
-        <div class="card-body">
-            <h5 class="card-title">Go back</h5>
         </div>
     </div>
     </template>
@@ -102,9 +75,11 @@
             <li class="nav-item">
                 <select id="page_selection" class="form-select bg-light" aria-label="">
                   <option selected>Page selection</option>
+                  {%if pages %}
                   {% for page in pages %}
-                    <option value="{{page.page_id}}">{{page.page_id}}</option>
+                  <option value="{{page.page_id}}">{{page.page_id}}</option>
                   {% endfor %}
+                  {%endif%}
                 </select>
             </li>
             <li class="nav-item">
@@ -133,7 +108,16 @@
 
 <div class="offcanvas offcanvas-start show" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="fileoffcanvasScrolling" aria-labelledby="fileoffcanvasScrollingLabel">
   <div class="offcanvas-header">
-  <button class="btn btn-dark" id="files-tab" data-bs-toggle="modal" data-bs-target="#file-modal"><i class="bi bi-archive"></i> Files</button>   
+  <button 
+    class="btn btn-dark" 
+    hx-vals="js:{page_id: get_page_id(), path: get_current_path()}"
+    hx-get="editor/components/explorer"
+    hx-target="#file-modal"
+    hx-trigger="click"
+    data-bs-toggle="modal" 
+    data-bs-target="#file-modal">
+      <i class="bi bi-archive"></i> Files
+    </button>   
   <button  type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body">
@@ -143,18 +127,10 @@
   </div>
 </div>
   
-<!-- Files Modal -->
+<!-- File Explorer Modal -->
 <div id="file-modal" class="modal modal-xl fade" tabindex="-1" aria-labelledby="file-modal-label" aria-hidden="true">
-  <div class="modal-dialog">
-  <div class="modal-content">
-      <div class="modal-header">
-      <h1 class="modal-title fs-5" id="file-modal-label"></h1>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      ...
-      </div>
-  </div>
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content"></div>
   </div>
 </div>
 

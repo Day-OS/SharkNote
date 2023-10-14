@@ -7,3 +7,6 @@
 [submodule "bootstrap-icons"]
 	path = static/3rdparty/bootstrap-icons
 	url = https://github.com/twbs/icons
+[submodule "htmx"]
+	path = static/3rdparty/htmx
+	url = https://github.com/bigskysoftware/htmx.git

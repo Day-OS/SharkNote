@@ -10,10 +10,11 @@ mod configuration;
 mod editor;
 pub mod pages;
 pub mod users;
+pub mod utils;
 
 mod catchers;
 
-use pages::Permission;
+use pages::permissions::Permission;
 use rocket::config::LogLevel;
 use rocket::fairing::{self, AdHoc};
 use rocket::figment::providers::{Env, Format, Serialized, Toml};
@@ -31,7 +32,8 @@ use simplelog::{
 use std::fs::File;
 use std::path::PathBuf;
 use std::time::Duration;
-use users::user;
+use users::{User, UserAccountStatus};
+use crate::editor::file_explorer::get_dir_contents;
 //use users::user::{ User, self};
 use rocket_db_pools::{sqlx, Database};
 use std::convert::Infallible;
@@ -67,19 +69,19 @@ async fn database_startup(rocket: Rocket<Build>) -> fairing::Result {
             .unwrap();
         let connection = &mut db.0.acquire().await.unwrap();
 
-        let user = user::User::new(
+        let user = User::new(
             connection,
             "dayos".to_owned(),
             "1234".to_owned(),
             "daniela.paladinof@gmail.com".to_owned(),
-            user::UserAccountStatus::Normal,
+            UserAccountStatus::Normal,
         )
         .await
         .unwrap();
-        let page = pages::page::Page::new(connection, "page_debug".to_string(), None)
+        let page = pages::Page::new(connection, "page_debug".to_string(), None)
             .await
             .unwrap();
-        page.set_collaborator(connection, &user, Permission::Owner)
+        page.set_permission(connection, &user, Permission::ModifyContent)
             .await
             .unwrap();
         Ok(rocket)
@@ -113,7 +115,7 @@ fn rocket() -> _ {
 
     //REMOVE AFTER DEBUG VVVV
     _ = std::fs::remove_file("/home/ubuntu/DEV/daytheipc-com/data/db.sqlite");
-    _ = std::fs::remove_dir_all("/home/ubuntu/DEV/daytheipc-com/data/page_debug/");
+    //_ = std::fs::remove_dir_all("/home/ubuntu/DEV/daytheipc-com/data/page_debug/");
     //^^^
 
     let store: SessionStore<String> = SessionStore {
@@ -149,7 +151,6 @@ fn rocket() -> _ {
             "/",
             routes![
                 get_file,
-                pages::files::get_dir_contents,
                 pages::files::get_file,
                 pages::files::write_file,
                 authentication::page,
@@ -162,6 +163,7 @@ fn rocket() -> _ {
                 authentication::register::confirmation,
                 authentication::register::check,
                 editor::editor,
+                editor::file_explorer::get_dir_contents
             ],
         )
         .attach(AdHoc::config::<configuration::SharkNoteConfig>())

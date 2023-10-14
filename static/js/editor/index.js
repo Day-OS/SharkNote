@@ -5,6 +5,14 @@ const PARSER = new DOMParser();
 
 const dir = new DirVisualizer(PAGE_SELECTED);
 
+window.get_page_id = () => {
+    return PAGE_SELECTED
+}
+window.get_current_path = () => {
+    return dir.pointer
+}
+
+
 /**
  * Get files content and sends it to the editor
  * @param {String} path 
@@ -42,6 +50,9 @@ function delete_from_path_conf(path){
 
 document.addEventListener('DOMContentLoaded', () =>{
 
+
+/*
+ 
     //https://ace.c9.io/#nav=howto
     const editor = ace.edit("editor");
     editor.commands.addCommand({
@@ -84,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     create_button.addEventListener("click", async ()=>{
         /**
          * @type {File[]}
-         */
+         * /
         let files = []
 
         if (upload_element.disabled) {
@@ -138,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () =>{
             });
     
     })
-
+    */
 
     //bootstrap.Modal.getOrCreateInstance(dir_modal).show();
     

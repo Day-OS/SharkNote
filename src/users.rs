@@ -1,6 +1,8 @@
+pub mod code;
+pub mod invite;
 
 
-use crate::pages::page::{Page};
+use crate::pages::{Page, permissions::Permission};
 
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -138,12 +140,13 @@ impl User {
         Ok(sha256_password(user.user_id, password) == user.password)
     }
 
-    pub async fn get_owned_pages(
+    pub async fn get_modifiable_pages(
         self: &Self,
         connection: &mut sqlx::SqliteConnection,
     ) -> Result<Vec<Page>, sqlx::Error> {
-        sqlx::query_as::<_, Page>("SELECT * FROM page WHERE page_id IN (SELECT page_id FROM page_user WHERE user_id = ?1);")
+        sqlx::query_as::<_, Page>("SELECT * FROM page WHERE page_id IN (SELECT page_id FROM permission WHERE user_id = ?1 AND permission = ?2);")
         .bind(self.user_id.clone())
+        .bind(Permission::ModifyContent)
         .fetch_all(connection)
         .await
     }

@@ -30,14 +30,13 @@ toml = "0.7.6"
 strfmt = "0.2.4"
 rand = "0.8.5"
 strum =  { version = "0.25", features = ["derive"] }
-base64 = "0.21.4"
 rocket-multipart-form-data = "0.10.6"
 
 
 [dependencies.sqlx]
 version = "0.6.0"
 default-features = false
-features = ["macros", "offline", "migrate"]
+features = ["macros", "offline", "migrate", "json"]
 
 [dependencies.rocket_db_pools]
 version = "=0.1.0-rc.3"

@@ -1,11 +1,10 @@
 use super::check_recaptcha;
 use super::email;
-use super::user;
-use super::user::UserAccountStatus;
 use super::AuthParameters;
+use crate::users::UserAccountStatus;
 use crate::users::code::Code;
 use crate::users::invite;
-use crate::{configuration, users::user::User};
+use crate::{configuration, users::User};
 use log::error;
 use rocket::serde::json::Json;
 use rocket::{form::Form, post, response::Redirect, FromForm, State};
@@ -65,7 +64,7 @@ pub async fn confirmation(
     let session = SessionCookie::get(&session).await;
 
     if let SessionCookie::AwaitingConfirmation { user_id } = session {
-        let user: User = user::User::get(&mut connection, user_id).await.unwrap();
+        let user: User = User::get(&mut connection, user_id).await.unwrap();
         if let Ok(code) = Code::get(&mut connection, &user).await {
             if form.code == code.code.to_string() {
                 code.delete(&mut connection).await.unwrap();
@@ -125,7 +124,7 @@ pub async fn post(
         form.user_id.clone(),
         form.password.clone(),
         form.email.clone(),
-        user::UserAccountStatus::Normal,
+        UserAccountStatus::Normal,
     )
     .await;
 

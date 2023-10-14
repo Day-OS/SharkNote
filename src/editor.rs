@@ -9,6 +9,9 @@ use rocket_db_pools::Connection;
 use rocket_dyn_templates::{context, Template};
 use rocket_session_store::Session;
 use serde::Serialize;
+use users::User;
+use pages::Page;
+pub mod file_explorer;
 
 #[derive(FromForm)]
 pub struct createPage {
@@ -37,15 +40,15 @@ pub async fn editor(
     .await;
     let returnal_error = Redirect::to("/");
     if let SessionCookie::LoggedIn { user_id } = SessionCookie::get(&session).await {
-        let user = users::user::User::get(&mut *connection, user_id.clone())
+        let user = User::get(&mut *connection, user_id.clone())
             .await
             .map_err(|_| returnal_error)?;
-        let pages = user.get_owned_pages(&mut *connection).await.ok();
+        let pages = user.get_modifiable_pages(&mut *connection).await.ok();
         let select_page = Template::render("editor/select_page", context! {pages:&pages}); //for when the page is not specified
         if page_id.is_none() {
             return Ok(select_page);
         }
-        let page = pages::page::Page::get(&mut *connection, page_id.unwrap().to_string()).await;
+        let page = pages::Page::get(&mut *connection, page_id.unwrap().to_string()).await;
         if page.is_err() {
             return Ok(select_page);
         }

@@ -1,7 +1,7 @@
 use rand::Rng;
 use sqlx::Sqlite;
 
-use super::user::User;
+use super::User;
 
 #[derive(sqlx::FromRow)]
 pub struct Code {

@@ -1,5 +1,4 @@
 use crate::configuration;
-use crate::users::user;
 use rocket::{get, response::Redirect, State};
 use rocket_db_pools::Connection;
 use rocket_dyn_templates::context;

@@ -9,11 +9,10 @@ use std::collections::HashMap;
 use strfmt::strfmt;
 
 use crate::users::code::Code;
-use crate::{configuration, users::user::User};
+use crate::{configuration, users::User};
 
 use super::check_recaptcha;
 use super::email;
-use super::user;
 use super::AuthParameters;
 
 use super::SessionCookie;
@@ -41,7 +40,7 @@ pub async fn confirmation(
     let session = SessionCookie::get(&session).await;
 
     if let SessionCookie::AwaitingConfirmation { user_id } = session {
-        let user: User = user::User::get(&mut connection, user_id).await.unwrap();
+        let user: User = User::get(&mut connection, user_id).await.unwrap();
         if let Ok(code) = Code::get(&mut connection, &user).await {
             if form.code == code.code.to_string() {
                 parameters.alert_level = Some("success".into());
@@ -100,7 +99,7 @@ pub async fn post(
 
     // IF SMTP Server is enabled
     if let Some(smtp) = &config.smtp {
-        let user = user::User::get(&mut connection, form.user_id.clone())
+        let user = User::get(&mut connection, form.user_id.clone())
             .await
             .unwrap();
         let code = Code::generate(&mut connection, &user).await.unwrap();
