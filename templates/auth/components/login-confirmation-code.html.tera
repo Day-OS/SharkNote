@@ -1,0 +1,11 @@
+{% extends "auth/base" %}
+
+{% block content %}
+  <form action="/auth/login-conf" method="post">
+    <div class="form-floating">
+      <input type="text" class="form-control" id="code" placeholder="" name="code" required>
+      <label for="code">Code</label>
+    </div>
+    <button class="btn btn-primary w-100 py-2" type="submit">Confirm code</button>
+  </form>
+{% endblock content %}

@@ -1,0 +1,43 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Renaming</h5>
+    </div>
+    <div class="modal-body">
+      <form 
+      hx-target="#notification-container"
+      hx-swap="beforeend"
+      hx-put="/editor/rename">
+        <input type="hidden" name="path" value="{{path}}"/>
+        <input type="hidden" name="page_id" value="{{page_id}}"/>
+        <div class="d-flex flex-sm-row flex-column" style="--bs-columns: 4; --bs-gap: 1rem;">
+          <div class="flex-grow-1 flex-fill m-2 p-3 border border-0 bg-dark  rounded  g-col-4 g-col-md-2">       
+            <label for="dirName" class="form-label ">Insert a new name</label>
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1"></span>
+              <input 
+              {% if _type == "dir" %}
+                oninput="regex_dir_name(this)" 
+              {% else %}
+                oninput="regex_file_name(this)" 
+              {% endif %}
+              name="new_name"
+              value="{{path | content_name}}"
+              id="dirName" type="text" class="form-control" placeholder="dirname">
+                <div class="invalid-feedback">
+                  Make it sure the name provided is valid.
+                </div>  
+            </div>   
+          </div>
+        </div>
+        <div class="p-2">
+          <button id="create-dir-button" class="btn btn-primary w-100" type="submit" data-bs-toggle="modal" data-bs-target="#file-modal" disabled>Rename</button>
+        </div>
+      </form>
+      
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#file-modal">Return</button>
+    </div>
+  </div>
+</div>

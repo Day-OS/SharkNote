@@ -1,0 +1,46 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">File Creation</h5>
+    </div>
+    <div class="modal-body">
+      <form id="file_creation_form"
+        onreset="setTimeout(()=>{file_upload_form_check('file_creation_form')}, 100)"
+        hx-encoding='multipart/form-data' 
+        hx-put="/editor/file-write/"
+        hx-target="#notification-container"
+        hx-swap="beforeend">
+        <input type="hidden" name="path" value="{{path}}"/>
+        <input type="hidden" name="page_id" value="{{page_id}}"/>
+        <div class="d-flex flex-sm-row flex-column" style="--bs-columns: 4; --bs-gap: 1rem;">
+          <div class="flex-grow-1 flex-fill m-2 p-3 border border-0 bg-dark  rounded  g-col-4 g-col-md-2">       
+            <label for="fileName" class="form-label ">Insert a name for the file</label>
+            <div class="input-group">
+              <span class="input-group-text"></span>
+              <input name="file_name" oninput="file_upload_form_check('file_creation_form');regex_file_name(this);" id="fileName" type="text" class="form-control" placeholder="file.extension">
+                <div class="invalid-feedback">
+                  Make it sure the file name is valid.
+                </div>  
+            </div>   
+          </div>
+          <div class="m-2 p-3 d-flex border rounded border-0  bg-dark g-col-4 g-col-md-2">
+            <div class="align-self-center flex-fill justify-content-center overflow-hidden">
+              <label for="fileUpload" class="form-label ">Or upload a file</label>
+              <input name="content" oninput="file_upload_form_check('file_creation_form')"  class="form-control"  type="file" multiple id="fileUpload">
+              <input class="form-control" type="reset" id="fileUploadRemove">
+            </div>
+          </div>
+        </div>
+        <div class="p-2">
+          <button id="create-file-button" 
+          data-bs-dismiss="modal"
+          class="btn btn-primary w-100" type="submit" disabled>Create</button>
+        </div>
+      </form>
+      
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#file-modal" data-bs-dismiss="modal">Return</button>
+    </div>
+  </div>
+</div>

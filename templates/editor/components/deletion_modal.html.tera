@@ -1,0 +1,33 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">⚠️ Deleting file</h5>
+    </div>
+    <div class="modal-body">
+      <b class="file-name">Deleting {{ path | content_name }}</b>
+      <p>Are you sure you want to delete this file?</p>
+    </div>
+    <div class="modal-footer">
+      <button 
+        hx-delete="/editor/delete"
+        hx-target="#notification-container"
+        hx-trigger="click"
+        hx-vals='{"path": "{{path}}", "page_id": "{{page_id}}"}'
+        type="button" 
+        data-bs-toggle="modal" 
+        data-bs-target="#file-modal" 
+        data-bs-dismiss="modal"
+        class="delete btn btn-danger">
+          Delete
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-secondary" 
+        data-bs-toggle="modal" 
+        data-bs-target="#file-modal" 
+        data-bs-dismiss="modal">
+          Cancel
+      </button>
+    </div>
+  </div>
+</div>

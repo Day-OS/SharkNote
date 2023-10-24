@@ -54,7 +54,7 @@ $offcanvas-horizontal-width: 80%;
 //@import "../3rdparty/bootstrap/scss/badge";
 //@import "../3rdparty/bootstrap/scss/alert";
 //@import "../3rdparty/bootstrap/scss/progress";
-//@import "../3rdparty/bootstrap/scss/list-group";
+@import "../3rdparty/bootstrap/scss/list-group";
 @import "../3rdparty/bootstrap/scss/close";
 @import "../3rdparty/bootstrap/scss/toasts";
 @import "../3rdparty/bootstrap/scss/modal";
@@ -64,8 +64,20 @@ $offcanvas-horizontal-width: 80%;
 //@import "../3rdparty/bootstrap/scss/spinners";
 @import "../3rdparty/bootstrap/scss/offcanvas";
 //@import "../3rdparty/bootstrap/scss/placeholders";
-//@import "../3rdparty/bootstrap/scss/helpers";
+@import "../3rdparty/bootstrap/scss/helpers";
 @import "../3rdparty/bootstrap/scss/utilities/api";
+
+
+.explorer-grid{
+  .explorer-element:hover{
+    border-color: $color-brighter;
+    cursor: pointer;
+  }
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fit, 100px)
+}
+
+
 
 
 $size-navbar: 8vh;
@@ -142,5 +154,16 @@ body{
   }
   .smallbtn{
     width: 40px;
+  }
+}
+@each $color, $value in $theme-colors {
+  .button-bg-#{$color} {
+    color: color-contrast($value) if($enable-important-utilities, !important, null);
+    background-color: RGBA(var(--#{$prefix}#{$color}-rgb), var(--#{$prefix}bg-opacity, 1)) if($enable-important-utilities, !important, null);
+  }
+  .button-bg-#{$color}:hover {
+    cursor: pointer;
+    color: color-contrast($value) if($enable-important-utilities, !important, null);
+    background-color: RGBA(var(--#{$prefix}#{$color}-rgb), var(--#{$prefix}bg-opacity, 0.7)) if($enable-important-utilities, !important, null);
   }
 }

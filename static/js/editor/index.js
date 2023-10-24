@@ -5,54 +5,50 @@ const PARSER = new DOMParser();
 
 const dir = new DirVisualizer(PAGE_SELECTED);
 
-window.get_page_id = () => {
-    return PAGE_SELECTED
-}
-window.get_current_path = () => {
-    return dir.pointer
-}
+document.regex_dir_name = (element)=>{
+    const button = element.form.querySelectorAll('button')[0];
+    let reg = new RegExp("^[a-zA-Zа-яА-Я0-9_!]+$");
+    let name_input_valid = reg.test(element.value);
+    button.disabled = element.value == "" || !name_input_valid ;
+    element.classList.toggle("is-invalid", !(element.value == "") && !name_input_valid)
 
-
-/**
- * Get files content and sends it to the editor
- * @param {String} path 
- */
-async function open_file(path){
-    let response = await fetch(`${PAGE_SELECTED}${path}`, {
-        method: 'GET',
-        headers: {},
-    });
-    bootstrap.Modal.getInstance('#file-modal').hide();
-    ace.edit("editor").setValue(await response.text());
+}
+document.regex_file_name = (element)=>{
+    const button = element.form.querySelectorAll('button')[0];
+    let reg = new RegExp("^[a-zA-Zа-яА-Я0-9](?:[a-zA-Zа-яА-Я0-9 ._-]*[a-zA-Z0-9])?\\.[a-zA-Z0-9_-]+$");
+    let name_input_valid = reg.test(element.value);
+    button.disabled = element.value == "" || !name_input_valid ;
+    element.classList.toggle("is-invalid", !(element.value == "") && !name_input_valid)
 }
 
 /**
- * Sends confirmation Modal
- * @param {String} name 
- * @param {String} path 
+ * 
+ * @param {String} form_id 
  */
-function delete_from_path(name, path){
-    let modal = $("#delete-modal")
-    modal.find(".file-name").html(name)
-    modal.find(".delete").click(()=>{
-        delete_from_path_conf(path)
-        modal.modal("hide")
-    })
-    modal.modal("show");
+document.file_upload_form_check = (form_id)=>{
+    const form = document.getElementById(form_id)
+    /**
+     * @type {HTMLInputElement}
+     */
+    let input_file = form.querySelectorAll('input[type="file"]')[0]
+    /**
+     * @type {HTMLInputElement}
+     */
+    let input_name = form.querySelectorAll('input[type="text"]')[0]
+    /**
+     * @type {HTMLInputElement}
+     */
+    let input_submit = form.querySelectorAll('#create-file-button')[0]
+    
+    let name_empty = input_name.value == ""
+    let file_not_loaded = input_file.value == ""
+    input_name.disabled = !file_not_loaded
+    input_file.disabled = !name_empty
+    input_submit.disabled = name_empty && file_not_loaded 
 }
-/**
- * Sends confirmation Modal
- * @param {String} path 
- */
-function delete_from_path_conf(path){
-    alert(`apagoukk ${path}`)
-}
+
 
 document.addEventListener('DOMContentLoaded', () =>{
-
-
-/*
- 
     //https://ace.c9.io/#nav=howto
     const editor = ace.edit("editor");
     editor.commands.addCommand({
@@ -65,6 +61,8 @@ document.addEventListener('DOMContentLoaded', () =>{
     editor.resize();
     editor.setTheme("ace/theme/twilight");
     editor.session.setMode("ace/mode/markdown");
+
+    /*
 
     document.getElementById('file-modal').addEventListener('show.bs.modal', (evt) => {dir.update()})
 

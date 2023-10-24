@@ -1,0 +1,80 @@
+{% extends "base" %}
+
+{% block head %}
+    <link rel="stylesheet" href="static/3rdparty/bootstrap-icons/font/bootstrap-icons.css">
+    <script src="/static/3rdparty/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/3rdparty/htmx/dist/htmx.min.js"></script>
+    <style type="text/css" media="print">
+      @page {
+          size: auto;   /* auto is the initial value */
+          margin: 0;  /* this affects the margin in the printer settings */
+      }
+    </style>
+    <!--
+    <script>
+      const DELAY = 1000;
+  
+      function send_check(){
+        //const data = $("#register_form").serializeArray().reduce( (obj, item) => { obj[item.name] = item.value; return obj; }, {});
+        $.ajax({
+          type: "POST",
+          url: "/auth/check",
+          data: new FormData($("#register_form")[0]),
+          contentType: false,
+          processData: false,
+          success: function(data){
+            $("#user_id_reg").toggleClass("is-invalid", data.user_id);
+            $("#email_reg").toggleClass("is-invalid", data.email);
+            $("#submit_reg").attr('disabled', data.user_id || data.email)
+            console.log(data);
+          },
+          failure: function(errMsg) {
+              console.log(errMsg)
+          }
+        });
+      }
+  
+      $(document).ready(function(){
+        $('#register_form input').change(()=>{
+          let $input = $(this), timer = $input.data('timer');
+          clearTimeout(timer);
+          timer = setTimeout(send_check, DELAY);
+          $input.data('timer', timer)
+        })
+      });
+      
+    </script>-->
+    
+    {% if recaptcha_key %}
+      <script src="https://www.google.com/recaptcha/enterprise.js?render={{ recaptcha_key }}"></script>
+      <script defer>
+        window.addEventListener('load', function () {
+          grecaptcha.enterprise.execute("{{ recaptcha_key }}", {action: 'login'}).then(function (token) {
+              var elements = document.querySelectorAll("#recaptcha_token");
+              //console.log(elements);
+              for (var i = 0; i < elements.length; i++) {
+                elements[i].value = token;
+              }
+              //submit.removeAttribute("disabled");
+          });
+        })
+          
+      </script>
+    {% endif%}
+    <link rel="stylesheet" href="/static/css/auth.css">
+{% endblock head %}
+
+{% block body %}
+
+<main class="form-signin w-100 m-auto">
+  <img class="mb-4" src="/static/logo.svg" alt="" width="400px" height="100">
+  <div id="alert"></div>
+  <div 
+  hx-trigger="load"
+  hx-get="/auth/components/login_register_forms"
+  id="auth-box">
+    {{loaders::default()}}
+  </div> 
+</main>
+
+{% endblock body %}

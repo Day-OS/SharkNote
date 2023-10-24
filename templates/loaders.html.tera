@@ -1,0 +1,5 @@
+{% macro default() %}
+  <div class="modal-body d-flex">
+    <img class="flex flex-fill" src="/static/spinner.svg" alt="">
+  </div>
+{% endmacro input %}

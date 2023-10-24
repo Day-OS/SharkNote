@@ -1,8 +1,4 @@
-{% extends "auth-base" %}
-
-{% block head %}
-  {{ super() }}
-{% endblock head %}
+{% extends "auth/base" %}
 
 {% block content %}
 <div class="tab-content" id="maintabs">

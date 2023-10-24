@@ -1,8 +1,6 @@
-pub mod code;
 pub mod invite;
 
-
-use crate::pages::{Page, permissions::Permission};
+use crate::pages::{permissions::Permission, Page};
 
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -135,9 +133,9 @@ impl User {
         connection: &mut sqlx::SqliteConnection,
         user_id: String,
         password: String,
-    ) -> Result<bool, sqlx::Error> {
+    ) -> Result<(bool, User), sqlx::Error> {
         let user = User::get(connection, user_id).await?;
-        Ok(sha256_password(user.user_id, password) == user.password)
+        Ok((sha256_password(user.user_id.clone(), password) == user.password.clone(), user))
     }
 
     pub async fn get_modifiable_pages(

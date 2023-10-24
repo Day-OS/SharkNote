@@ -6,20 +6,19 @@ use rocket::get;
 use rocket::{form::Form, post, response::Redirect, FromForm, State};
 use rocket_db_pools::Connection;
 
+use super::check_recaptcha_token;
 use rocket_dyn_templates::Template;
 use rocket_recaptcha_v3::ReCaptcha;
 use rocket_recaptcha_v3::ReCaptchaToken;
 use strfmt::strfmt;
 
+use crate::authentication::Alert;
 use crate::users::UserAccountStatus;
-use crate::users::code::Code;
 use crate::{configuration, users::User};
-
-use super::check_recaptcha;
-use super::email;
+use super::email::{self, Code};
 use super::AuthParameters;
 
-use super::SessionCookie;
+use super::SessionManager;
 
 #[derive(FromForm, Debug)]
 pub struct ConfirmationForm {
@@ -39,10 +38,10 @@ pub async fn page(
     _connection: Connection<crate::DATABASE>,
     config: &State<configuration::SharkNoteConfig>,
 ) -> Template {
-    let mut template_args = AuthParameters::default();
+    let mut template_args = AuthParameters::new(config, recaptcha);
 
     if config.auth.recaptcha {
-        template_args.recaptcha = recaptcha.get_html_key_as_str().map(|a| a.to_string());
+        template_args.recaptcha_key = recaptcha.get_html_key_as_str().map(|a| a.to_string());
     }
     return Template::render("auth-reset", template_args);
 }
@@ -52,12 +51,13 @@ pub async fn confirmation(
     session: rocket_session_store::Session<'_, String>,
     form: Form<ConfirmationForm>,
     config: &State<configuration::SharkNoteConfig>,
+    recaptcha: &State<ReCaptcha>,
     mut connection: Connection<crate::DATABASE>,
 ) -> Result<Template, Redirect> {
-    let mut parameters = AuthParameters::default();
-    let session = SessionCookie::get(&session).await;
+    let mut parameters = AuthParameters::new(config,recaptcha);
+    let session = SessionManager::get(&session).await;
 
-    if let SessionCookie::AwaitingConfirmation { user_id } = session {
+    if let SessionManager::AwaitingConfirmation { user_id } = session {
         let mut user: User = User::get(&mut connection, user_id).await.unwrap();
         if let Ok(code) = Code::get(&mut connection, &user).await {
             if form.code == code.code.to_string() {
@@ -68,8 +68,7 @@ pub async fn confirmation(
                     .await
                     .unwrap();
 
-                parameters.alert_level = Some("success".into());
-                parameters.message = Some(config.messages.account_login_success.clone());
+                parameters.alert = Some(super::Alert { alert_level: super::AlertLevel::Success, message: config.messages.account_login_success.clone()});
                 parameters.final_button = Some(super::FinalButton {
                     href: "/editor".into(),
                     text: config.messages.account_login_link.clone(),
@@ -77,9 +76,7 @@ pub async fn confirmation(
                 return Ok(Template::render("auth-base", parameters));
             }
         }
-        parameters.mode = Some("reset".into());
-        parameters.alert_level = Some("error".into());
-        parameters.message = Some(config.messages.confirmation_code_error.clone());
+        parameters.alert = Some(super::Alert { alert_level: super::AlertLevel::Error, message: config.messages.confirmation_code_error.clone() });
         return Ok(Template::render("auth-conf", parameters));
     }
     //In case the user entered this page as a mistake.
@@ -94,11 +91,11 @@ pub async fn post(
     config: &State<configuration::SharkNoteConfig>,
     mut connection: Connection<crate::DATABASE>,
 ) -> Result<Template, Redirect> {
-    let mut parameters = AuthParameters::default();
-    parameters.recaptcha = recaptcha.get_html_key_as_str().map(|a| a.to_string());
+    let mut parameters = AuthParameters::new(config,recaptcha);
+    parameters.recaptcha_key = recaptcha.get_html_key_as_str().map(|a| a.to_string());
 
     //MANAGES RECAPTCHA
-    if let Err(template) = check_recaptcha(recaptcha, form.recaptcha_token.clone().unwrap()).await {
+    if let Err(template) = check_recaptcha_token(config, recaptcha, form.recaptcha_token.clone()).await {
         return Ok(template);
     }
     if let Ok(user) = User::get_from_email(&mut *connection, form.email.clone()).await {
@@ -122,13 +119,12 @@ pub async fn post(
             // Send the email
             if let Err(e) = email {
                 error!("{e}");
-                parameters.alert_level = Some("error".into());
-                parameters.message = Some(config.messages.account_email_send_error.clone().into());
+                parameters.alert = Some(Alert{ alert_level: crate::authentication::AlertLevel::Error, message: config.messages.account_email_send_error.clone().into() });
                 return Ok(Template::render("auth-panel", parameters));
             }
-            SessionCookie::set(
+            SessionManager::set(
                 &session,
-                SessionCookie::AwaitingConfirmation {
+                SessionManager::AwaitingConfirmation {
                     user_id: user.user_id.clone(),
                 },
             )
@@ -136,8 +132,6 @@ pub async fn post(
             .unwrap();
         }
     }
-    parameters.mode = Some("reset".into());
-    parameters.alert_level = Some("success".into());
-    parameters.message = Some(config.messages.reset_confimation_code_info.clone());
+    parameters.alert = Some(Alert { alert_level: super::AlertLevel::Success, message: config.messages.reset_confirmation_code_info.clone() });
     return Ok(Template::render("auth-conf", parameters));
 }

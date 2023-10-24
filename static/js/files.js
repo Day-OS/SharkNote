@@ -65,18 +65,6 @@ export class DirVisualizer {
         let directory = this.getDir(this.pointer)
         let grid = document.getElementById('file-grid').content.firstElementChild.cloneNode(true);
         
-        //RETURN BUTTON
-        let returncard = document.getElementById('return').content.firstElementChild.cloneNode(true);
-        let go_back_path = this.getParentPath(this.pointer)
-        if (go_back_path) {
-            returncard.querySelector("a").addEventListener("click", ()=>{
-                let Path = this.pointer.split("/")
-                Path.pop()
-                this.pointer = Path.join("/")
-                this.update()
-            })
-            grid.append(returncard)
-        }
 
         ///DIRECTORIES BUTTONS
         for (let i = 0; i < directory.directories.length; i++) {

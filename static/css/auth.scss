@@ -8,56 +8,120 @@ $color-dark-2:#272727;
 
 $blue: #619eb8;
 $blue-darker: #467285;
-$shark-dark: #2f3538;
+$gray-800: #2f3538;
 $shark-pink: #eac7c7;
 $darker-white: #dee2e6;
 
-@import "../3rdparty/bootstrap-5.3.2/scss/functions";
-@import "../3rdparty/bootstrap-5.3.2/scss/variables";
-@import "../3rdparty/bootstrap-5.3.2/scss/mixins";
+/*
+$blue,
+$indigo,
+$purple,
+$pink,
+$red,
+$orange,
+$yellow,
+$green,
+$teal,
+$cyan,
+$black,
+$white,
+$gray-600,
+$gray-800
+*/
 
-@import "../3rdparty/bootstrap-5.3.2/scss/reboot";
-@import "../3rdparty/bootstrap-5.3.2/scss/type";
-@import "../3rdparty/bootstrap-5.3.2/scss/images";
-@import "../3rdparty/bootstrap-5.3.2/scss/buttons";
-@import "../3rdparty/bootstrap-5.3.2/scss/button-group";
-@import "../3rdparty/bootstrap-5.3.2/scss/nav";
-@import "../3rdparty/bootstrap-5.3.2/scss/navbar";
-@import "../3rdparty/bootstrap-5.3.2/scss/offcanvas";
-@import "../3rdparty/bootstrap-5.3.2/scss/bootstrap.scss";
+
+@import "../3rdparty/bootstrap/scss/functions";
+@import "../3rdparty/bootstrap/scss/variables";
+@import "../3rdparty/bootstrap/scss/variables-dark";
+@import "../3rdparty/bootstrap/scss/maps";
+@import "../3rdparty/bootstrap/scss/mixins";
+@import "../3rdparty/bootstrap/scss/utilities";
+@import "../3rdparty/bootstrap/scss/root";
+@import "../3rdparty/bootstrap/scss/reboot";
+@import "../3rdparty/bootstrap/scss/type";
+@import "../3rdparty/bootstrap/scss/images";
+//@import "../3rdparty/bootstrap/scss/containers";
+//@import "../3rdparty/bootstrap/scss/grid";
+//@import "../3rdparty/bootstrap/scss/tables";
+@import "../3rdparty/bootstrap/scss/forms";
+@import "../3rdparty/bootstrap/scss/buttons";
+//@import "../3rdparty/bootstrap/scss/transitions";
+//@import "../3rdparty/bootstrap/scss/dropdown";
+//@import "../3rdparty/bootstrap/scss/button-group";
+@import "../3rdparty/bootstrap/scss/nav";
+@import "../3rdparty/bootstrap/scss/navbar";
+//@import "../3rdparty/bootstrap/scss/card";
+///@import "../3rdparty/bootstrap/scss/accordion";
+//@import "../3rdparty/bootstrap/scss/breadcrumb";
+//@import "../3rdparty/bootstrap/scss/pagination";
+//@import "../3rdparty/bootstrap/scss/badge";
+@import "../3rdparty/bootstrap/scss/alert";
+//@import "../3rdparty/bootstrap/scss/progress";
+@import "../3rdparty/bootstrap/scss/list-group";
+//@import "../3rdparty/bootstrap/scss/close";
+//@import "../3rdparty/bootstrap/scss/toasts";
+//@import "../3rdparty/bootstrap/scss/modal";
+//@import "../3rdparty/bootstrap/scss/tooltip";
+//@import "../3rdparty/bootstrap/scss/popover";
+//@import "../3rdparty/bootstrap/scss/carousel";
+//@import "../3rdparty/bootstrap/scss/spinners";
+//@import "../3rdparty/bootstrap/scss/offcanvas";
+//@import "../3rdparty/bootstrap/scss/placeholders";
+@import "../3rdparty/bootstrap/scss/helpers";
+@import "../3rdparty/bootstrap/scss/utilities/api";
 
 @media all{
-    html,body {
-    background: linear-gradient(#fff, $shark-pink) !important;
-    height: 100%;
+    body {
+      height: 100%;
+      background: url("/static/wave.svg"), linear-gradient(#fff, $shark-pink);
+      background-size: cover;
+      background-repeat: no-repeat;
     }
+}
+.auth-box{
+  .nav-tabs{
+    display: flex;
+    border-radius: .25rem;
+    *{
+      flex: 1 1;
+    }
+    .nav-link, .nav-link:hover{
+      color: $gray-800;
+      background-color: $body-secondary-bg;
+      border-width: 0 1px 1px 1px;
+      border-color: $gray-800;
+      border-radius: 0;
+    }
+    .nav-link:hover{
+      background-color: $body-bg;
+    }
+    .nav-link.active:hover, .nav-link.active{
+      border-width: 0;
+      background-color: $body-bg;
+    }
+  
+  }
+  
+  .content{
+    border-color: $gray-800;
+    padding: 20px;
+  }
+  background-color: $body-bg;
+  border-radius:0 .25rem .25rem .25rem;
+  border-width: 1px 4px 4px 1px;
+  border-color: $gray-800;
+  border-style: solid;
+
 }
 
-.nav-item {
-    border-radius: .25rem .25rem 0 0;
-    background-color: $darker-white;
-    *{
-        color: $blue;
-        text-shadow: #2f3538;
-        width: 100%;
-    }
-    *:hover{
-        color: $blue;
-    }
-    
-}
-.tab-content{
-    padding: 20px;
-    background-color: white;
-    border-width: 0 1px 1px 1px;
-    border-style: solid;
-    border-color: $darker-white;
-    border-radius: 0 0 .25rem .25rem;
-}
 
 .btn-primary{
-    border-width: 2px;
-    border-color: $shark-dark;
+    border-width: 1px 4px 4px 1px;;
+    border-color: $gray-800;
+}
+.btn-primary:hover{
+  border-width: 2px;
+  border-color: $gray-800;
 }
 
 .form-signin {
@@ -65,6 +129,7 @@ $darker-white: #dee2e6;
   padding: 1rem;
 }
 
+/*
 .form-signin input[type="text"] {
     margin-bottom: -1px;
     border-bottom-right-radius: 0;
@@ -81,4 +146,30 @@ $darker-white: #dee2e6;
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+*/
+@mixin speech-bubble($size, $background) {
+  background: $background;
+  display: inline-block;
+  padding: $size;
+  position: relative;
+  margin-left: $size;
+
+  &:before {
+    content: '';
+    position: absolute;
+    left: -$size;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    border-top: ($size / 2) solid transparent;
+    border-right: $size solid $background;
+    border-bottom: ($size / 2) solid transparent;
+  }
+}
+
+
+.speech-bubble {
+	position: relative;
+  @include speech-bubble(10px, $blue);
 }

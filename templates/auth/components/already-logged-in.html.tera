@@ -1,0 +1,13 @@
+{% extends "auth/base" %}
+
+{% block content %}
+<div class="auth-box">
+  <div class="content" id="maintabs">
+    {{macros::bubble(image="/static/blobhaj/Blobhaj_Thinking.svg", text=messages.already_logged_in_prompt)}}
+    <input
+    hx-target="#auth-box"
+    hx-get="/auth/logout"
+    class="btn btn-primary w-100" type="button" value="Logout">
+  </div>
+</div>
+{% endblock content %}

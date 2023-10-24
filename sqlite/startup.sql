@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS  permission (
     page_id TEXT NOT NULL,
     user_id TEXT NOT NULL,
     permission TEXT NOT NULL,
-    PRIMARY KEY (page_id, user_id)
+    PRIMARY KEY (page_id, user_id, permission)
     FOREIGN KEY (page_id) REFERENCES page(page_id) ON DELETE CASCADE ON UPDATE CASCADE
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );

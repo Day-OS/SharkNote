@@ -1,3 +1,5 @@
+{% import "loaders" as loaders %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

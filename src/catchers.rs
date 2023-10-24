@@ -1,4 +1,4 @@
-use rocket::{catch};
+use rocket::catch;
 use rocket_dyn_templates::{context, Template};
 
 #[catch(404)]

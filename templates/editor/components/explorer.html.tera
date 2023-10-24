@@ -1,0 +1,149 @@
+{#File Explorer Modal#}
+<div class="modal-dialog">
+    <param name="path" value="{{path}}">
+    <div class="modal-content">
+        <div class="modal-header ">
+            <div class="flex-fill">
+                <h1 class="modal-title fs-5" id="file-modal-label">
+                    <b>
+                        <i class="bi bi-folder-fill"></i>
+                        File explorer
+                    </b>
+                    {% if path %} - {% endif %}
+                    {{path}} 
+                </h1>
+                <div class="d-flex w-100 me-2">
+
+                    <!--hx-include="param[name='path'],param[name='page_id']"-->
+                    <button 
+                    hx-vals='{"path": "{{path}}", "page_id": "{{page_id}}"}'
+                    hx-post="editor/components/file_creation_modal"
+                    hx-target="#input-modal"
+                    hx-trigger="click"
+                    data-bs-toggle="modal" 
+                    data-bs-target="#input-modal"
+                    type="button" class="m-1 btn btn-primary">
+                        <i class="bi bi-file-earmark-plus"></i>
+                        Create File / Upload</button>
+                    <button 
+                    hx-vals='{"path": "{{path}}", "page_id": "{{page_id}}"}'
+                    hx-post="editor/components/dir_creation_modal"
+                    hx-target="#input-modal"
+                    hx-trigger="click"
+                    data-bs-toggle="modal" 
+                    data-bs-target="#input-modal"
+                    type="button" class="m-1 btn btn-primary">
+                        <i class="bi bi-folder-plus"></i>
+                        Create Dir</button>
+                </div>
+            </div>
+            
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="explorer-grid grid text-center file-list" style="--bs-gap: .25rem 1rem;">
+                {% if parent_path is not none %}
+                    <div class="explorer-element card g-col-6 g-col-md-2" >
+                        <div
+                           hx-vals='{"path": "{{parent_path}}", "page_id": "{{page_id}}"}'
+                           hx-get="editor/components/explorer"
+                           hx-target="#file-modal"
+                           hx-trigger="click">
+                            <i class="bi bi-arrow-return-left card-img-top"></i>
+                            <div class="card-body">
+                                <h5 class="card-title">Go back</h5>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% for dir_name in directories %}
+                    <div class="explorer-element card g-col-6 g-col-md-2" >
+                        <div class="dropdown position-absolute top-0 end-0">
+                            <button class="m-2 btn btn-secondary smallbtn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear-fill"></i>
+                            </button>
+                            <ul class="dropdown-menu p-1">
+                                <li 
+                                hx-vals='{"_type": "dir" ,"path": "{{path}}{% if path %}/{% endif %}{{dir_name}}", "page_id": "{{page_id}}"}'
+                                hx-post="editor/components/renaming_modal"
+                                hx-target="#input-modal"
+                                hx-trigger="click"                 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#input-modal"
+                                class="rounded-1 button-bg-primary dropdown-item">
+                                    <i class="pe-2 bi bi-cursor-text"></i>
+                                    Rename
+                                </li>
+                                <li 
+                                hx-vals='{"path": "{{path}}{% if path %}/{% endif %}{{dir_name}}", "page_id": "{{page_id}}"}'
+                                hx-post="editor/components/deletion_modal"
+                                hx-target="#input-modal"
+                                hx-trigger="click"                 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#input-modal"
+                                class="rounded-1 button-bg-danger  dropdown-item mt-1">
+                                    <i class="pe-2 bi bi-trash3-fill"></i>
+                                    Delete
+                                </li>
+                            </ul>
+                        </div>
+                        <div
+                            hx-vals='{"path": "{{path}}{% if path %}/{% endif %}{{dir_name}}", "page_id": "{{page_id}}"}'
+                            hx-get="editor/components/explorer"
+                            hx-target="#file-modal"
+                            hx-trigger="click"
+                            ><i class="icon bi bi-folder2 card-img-top"></i>
+                            
+                            
+                            <div class="card-body">
+                                <h5 class="card-title">{{dir_name}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for file_name in files %}
+                    <div class="explorer-element dropdown card g-col-6 g-col-md-2" >
+                        <div class="position-absolute top-0 end-0">
+                            <button class="m-2 btn btn-secondary smallbtn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear-fill"></i>
+                            </button>
+                            <ul class="dropdown-menu p-1">
+                                <li class="rounded-1 button-bg-primary dropdown-item ">    <i class="pe-2 bi bi-pencil-square"></i>Edit</li>
+                                <li 
+                                hx-vals='{"_type": "file" ,"path": "{{path}}{% if path %}/{% endif %}{{file_name}}", "page_id": "{{page_id}}"}'
+                                hx-post="editor/components/renaming_modal"
+                                hx-target="#input-modal"
+                                hx-trigger="click"                 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#input-modal"
+                                class="rounded-1 button-bg-primary dropdown-item mt-1"><i class="pe-2 bi bi-cursor-text"></i>Rename</li>
+                                <li 
+                                hx-vals='{"path": "{{path}}{% if path %}/{% endif %}{{file_name}}", "page_id": "{{page_id}}"}'
+                                hx-post="editor/components/deletion_modal"
+                                hx-target="#input-modal"
+                                hx-trigger="click"                 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#input-modal"
+                                class="rounded-1 button-bg-danger  dropdown-item mt-1"><i class="pe-2 bi bi-trash3-fill"></i>Delete</li>
+                            </ul>
+                        </div>
+                        <div>
+                            {% set ext = file_name | extension %}
+                            {% if ext  == "png" or ext  == "jpeg"  or ext  == "jpg" or ext  == "gif" %}
+                                <div class="p-3">
+                                    <img class="rounded object-fit-cover" src="/{{page_id}}/{{path}}{% if path %}/{% endif %}{{file_name}}" alt="">
+                                </div>
+                               
+                            {% else %}
+                                <i class="icon bi card-img-top bi-filetype-{{file_name | extension}} bi-question-square"></i>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{file_name}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

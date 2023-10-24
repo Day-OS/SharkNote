@@ -1,0 +1,23 @@
+{% import "auth/macros" as macros %}
+
+{% if alert %}
+    {% if alert.alert_level == "success" %}
+        <div class="alert alert-success" role="alert">
+        {{alert.message}}
+        </div>
+    {% elif alert.alert_level == "error" %}
+        <div class="alert alert-danger" role="alert">
+        ⚠️ {{alert.message}}
+        </div>
+    {% endif %}
+{% endif %}
+
+
+{% block content %}{% endblock content %}
+
+{% if final_button %}
+<div class="content" id="maintabs">
+    <button onclick="location.href='{{final_button.href}}'" class="btn btn-primary w-100 py-2">{{final_button.text}}</button>
+</div>
+{% endif %}
+

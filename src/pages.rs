@@ -1,5 +1,3 @@
-use crate::users::User;
-
 use rocket::tokio;
 //use crate::users::user::User;
 use rocket_db_pools::sqlx;
@@ -7,7 +5,6 @@ use serde::Serialize;
 use sqlx::Sqlite;
 pub mod files;
 pub mod permissions;
-
 
 #[derive(sqlx::FromRow, Serialize)]
 pub struct Page {
@@ -21,9 +18,6 @@ pub enum PageStatus {
     LinkOnly, //Anyone with a link can acess it. It does not show up on search websites.
     Private,  //Only a user that is logged into the website
 }
-
-
-
 
 impl Page {
     pub async fn new(
@@ -67,4 +61,3 @@ impl Page {
         Ok(page)
     }
 }
-

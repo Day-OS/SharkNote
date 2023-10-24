@@ -1,21 +1,21 @@
 use log::error;
 
+use log::info;
+use rocket::http::Status;
 use rocket::{form::Form, post, response::Redirect, FromForm, State};
 use rocket_db_pools::Connection;
 use rocket_dyn_templates::Template;
 use rocket_recaptcha_v3::ReCaptcha;
 use rocket_recaptcha_v3::ReCaptchaToken;
-use std::collections::HashMap;
-use strfmt::strfmt;
 
-use crate::users::code::Code;
 use crate::{configuration, users::User};
 
-use super::check_recaptcha;
+use super::check_recaptcha_token;
 use super::email;
 use super::AuthParameters;
 
-use super::SessionCookie;
+use super::email::Code;
+use super::SessionManager;
 
 #[derive(FromForm, Debug)]
 pub(crate) struct ConfirmationForm {
@@ -34,27 +34,32 @@ pub async fn confirmation(
     session: rocket_session_store::Session<'_, String>,
     form: Form<ConfirmationForm>,
     config: &State<configuration::SharkNoteConfig>,
+    recaptcha: &State<ReCaptcha>,
     mut connection: Connection<crate::DATABASE>,
 ) -> Result<Template, Redirect> {
-    let mut parameters = AuthParameters::default();
-    let session = SessionCookie::get(&session).await;
+    todo!();
+    let mut parameters = AuthParameters::new(config, recaptcha);
+    let session = SessionManager::get(&session).await;
 
-    if let SessionCookie::AwaitingConfirmation { user_id } = session {
+    if let SessionManager::AwaitingConfirmation { user_id } = session {
         let user: User = User::get(&mut connection, user_id).await.unwrap();
         if let Ok(code) = Code::get(&mut connection, &user).await {
             if form.code == code.code.to_string() {
-                parameters.alert_level = Some("success".into());
-                parameters.message = Some(config.messages.account_login_success.clone());
+                parameters.alert = Some(super::Alert {
+                    alert_level: super::AlertLevel::Success,
+                    message: config.messages.account_login_success.clone(),
+                });
                 parameters.final_button = Some(super::FinalButton {
                     href: "/editor".into(),
                     text: config.messages.account_login_link.clone(),
                 });
-                return Ok(Template::render("auth-base", parameters));
+                return Ok(Template::render("auth/base", parameters));
             }
         }
-        parameters.mode = Some("login".into());
-        parameters.alert_level = Some("error".into());
-        parameters.message = Some(config.messages.confirmation_code_error.clone());
+        parameters.alert = Some(super::Alert {
+            alert_level: super::AlertLevel::Error,
+            message: config.messages.confirmation_code_error.clone(),
+        });
         return Ok(Template::render("auth-conf", parameters));
     }
     //In case the user entered this page as a mistake.
@@ -68,73 +73,105 @@ pub async fn post(
     form: Form<LoginForm>,
     config: &State<configuration::SharkNoteConfig>,
     mut connection: Connection<crate::DATABASE>,
-) -> Result<Template, Redirect> {
-    let mut parameters = AuthParameters::default();
-    parameters.recaptcha = recaptcha.get_html_key_as_str().map(|a| a.to_string());
+) -> (Status, Template) {
+    let mut parameters = AuthParameters::new(config, recaptcha);
+    parameters.recaptcha_key = recaptcha.get_html_key_as_str().map(|a| a.to_string());
 
-    //MANAGES RECAPTCHA
-    if let Err(template) = check_recaptcha(recaptcha, form.recaptcha_token.clone().unwrap()).await {
-        return Ok(template);
-    }
+    let code = async move || -> Status {
+        if let Err(_) = check_recaptcha_token(config, recaptcha, form.recaptcha_token.clone()).await
+        {
+            return Status::Forbidden;
+        };
 
-    let password_is_right: bool = match User::check_login_credentials(
-        &mut *connection,
-        form.user_id.clone(),
-        form.password.clone(),
-    )
-    .await
-    {
-        Ok(b) => b,
-        Err(_e) => {
-            parameters.alert_level = Some("error".into());
-            parameters.message = Some(config.messages.account_login_error.clone());
-            return Ok(Template::render("auth-panel", parameters));
-        }
-    };
-    if password_is_right == false {
-        parameters.alert_level = Some("error".into());
-        parameters.message = Some(config.messages.account_login_error.clone());
-        return Ok(Template::render("auth-panel", parameters));
-    }
+        //Had to use two matches because the compiler was drunk and wouldn't help. It was giving me an error that the parameter variable was moved inside the map_err closure. It shouldn't happen because I was using the ? macro. I'm actually pissed off by this...
+        let user = match match User::check_login_credentials(
+            &mut *connection,
+            form.user_id.clone(),
+            form.password.clone(),
+        )
+        .await
+        {
+            Ok((password_is_right, user)) => {
+                if password_is_right {
+                    Ok(user)
+                } else {
+                    Err(())
+                }
+            }
+            Err(e) => {
+                info!("{e} | In a login attempt.");
+                Err(())
+            }
+        } {
+            Ok(u) => u,
+            Err(_) => {
+                return Status::Forbidden;
+            }
+        };
 
-    // IF SMTP Server is enabled
-    if let Some(smtp) = &config.smtp {
-        let user = User::get(&mut connection, form.user_id.clone())
+        // IF SMTP Server is enabled
+        if config.smtp.is_some() {
+            //same thing happened here, had to use a useless match when I would normally just use a map_err...
+            match email::send_login_code(&mut *connection, &config, &user).await {
+                Ok(_) => (),
+                Err(e) => {
+                    error!("{e}");
+                    return Status::InternalServerError;
+                }
+            }
+
+            SessionManager::set(
+                &session,
+                SessionManager::AwaitingConfirmation {
+                    user_id: form.user_id.clone(),
+                },
+            )
             .await
             .unwrap();
-        let code = Code::generate(&mut connection, &user).await.unwrap();
-        let mut vars = HashMap::new();
-        vars.insert(
-            "display_program_name".to_string(),
-            config.messages.display_program_name.clone(),
-        );
-        vars.insert("user_id".to_string(), form.user_id.clone());
-        vars.insert("confirmation_code".to_string(), code.to_string());
-        let email = email::send_email(
-            smtp,
-            user.email.clone(),
-            strfmt(&config.messages.email_login_title, &vars).unwrap(),
-            strfmt(&config.messages.email_login_text, &vars).unwrap(),
-        );
-
-        // Send the email
-        if let Err(e) = email {
-            error!("{e}");
-            parameters.alert_level = Some("error".into());
-            parameters.message = Some(config.messages.account_email_send_error.clone().into());
-            return Ok(Template::render("auth-panel", parameters));
+            return Status::Accepted;
         }
-        SessionCookie::set(
+
+        if let Err(_) = SessionManager::set(
             &session,
-            SessionCookie::AwaitingConfirmation {
+            SessionManager::LoggedIn {
                 user_id: form.user_id.clone(),
             },
         )
         .await
-        .unwrap();
+        {
+            return Status::InternalServerError;
+        };
+        Status::Ok
+    }()
+    .await;
+
+    match code {
+        //User Logged in successfully and can access his account.
+        Status { code: 200 } => {
+            return (
+                Status::Ok,
+                Template::render("auth/components/login-success", parameters),
+            );
+        }
+        //User Logged in, but have to insert the email code
+        Status { code: 202 } => {
+            return (
+                Status::Accepted,
+                Template::render("auth/components/login-confirmation-code", parameters),
+            );
+        }
+        //Wrong Password
+        Status { code: 403 } => {
+            return (
+                Status::Forbidden,
+                Template::render("auth/components/login-register-forms", parameters),
+            );
+        }
+        Status { code: 500 } | _ => {
+            return (
+                Status::InternalServerError,
+                Template::render("auth/components/login-register-forms", parameters),
+            );
+        }
     }
-    parameters.mode = Some("login".into());
-    parameters.alert_level = Some("success".into());
-    parameters.message = Some(config.messages.login_confimation_code_info.clone());
-    return Ok(Template::render("auth-conf", parameters));
 }

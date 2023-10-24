@@ -1,0 +1,10 @@
+{% extends "auth/base" %}
+
+{% block content %}
+<div class="auth-box">
+  <div class="content" id="maintabs">
+    {{macros::bubble(text=messages.account_login_success)}}
+    <a class="btn btn-primary w-100 py-2" href="/editor">Go to the Editor</a>
+  </div>
+</div>
+{% endblock content %}

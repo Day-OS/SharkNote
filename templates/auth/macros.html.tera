@@ -1,0 +1,8 @@
+{% macro bubble(image="/static/blobhaj/Blobhaj_Love.svg", text) %}
+    <div class="d-flex flex-row justify-content-center m-3">
+        <img class="w-50 " src={{image}} alt="">
+        <div class="speech-bubble">
+            {{text}}
+        </div>
+    </div>
+{% endmacro  %}

@@ -1,3 +1,23 @@
+const audio = new Audio('static/sounds/blup.ogg')
+document.addEventListener('DOMNodeInserted', (e)=>{
+    
+    if (!e.target.classList.contains("toast")) {return}
+    /**
+     * @type {Element}
+     */
+    const notification = e.target;
+    notification.addEventListener("hidden.bs.toast", ()=>{
+        notification.remove();
+    })
+    notification.addEventListener("shown.bs.toast", ()=>{
+        audio.play()
+    })
+    new bootstrap.Toast(notification).show()
+})
+
+
+
+/*
 export class Notification {
     constructor(title, content){
         this.title = title
@@ -27,3 +47,5 @@ document.addEventListener('DOMContentLoaded', () =>{
 
     
 }, false);
+
+*/
