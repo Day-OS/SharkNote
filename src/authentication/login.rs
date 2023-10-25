@@ -8,6 +8,7 @@ use rocket_dyn_templates::Template;
 use rocket_recaptcha_v3::ReCaptcha;
 use rocket_recaptcha_v3::ReCaptchaToken;
 
+use crate::authentication::CSRF;
 use crate::{configuration, users::User};
 
 use super::check_recaptcha_token;
@@ -15,7 +16,7 @@ use super::email;
 use super::AuthParameters;
 
 use super::email::Code;
-use super::SessionManager;
+use super::SessionToken;
 
 #[derive(FromForm, Debug)]
 pub(crate) struct ConfirmationForm {
@@ -31,17 +32,18 @@ pub(crate) struct LoginForm {
 
 #[post("/auth/login-conf", data = "<form>")]
 pub async fn confirmation(
-    session: rocket_session_store::Session<'_, String>,
+    session: rocket_session_store::Session<'_, SessionToken>,
+    recaptcha: &State<ReCaptcha>,
     form: Form<ConfirmationForm>,
     config: &State<configuration::SharkNoteConfig>,
-    recaptcha: &State<ReCaptcha>,
     mut connection: Connection<crate::DATABASE>,
+    csrf: &State<CSRF>,
 ) -> Result<Template, Redirect> {
     todo!();
     let mut parameters = AuthParameters::new(config, recaptcha);
-    let session = SessionManager::get(&session).await;
+    let session = SessionToken::init(&session, csrf).await;
 
-    if let SessionManager::AwaitingConfirmation { user_id } = session {
+    if let SessionToken::AwaitingConfirmation { user_id , csrf_token:_} = session {
         let user: User = User::get(&mut connection, user_id).await.unwrap();
         if let Ok(code) = Code::get(&mut connection, &user).await {
             if form.code == code.code.to_string() {
@@ -69,10 +71,11 @@ pub async fn confirmation(
 #[post("/auth/login", data = "<form>")]
 pub async fn post(
     recaptcha: &State<ReCaptcha>,
-    session: rocket_session_store::Session<'_, String>,
+    session: rocket_session_store::Session<'_, SessionToken>,
     form: Form<LoginForm>,
     config: &State<configuration::SharkNoteConfig>,
     mut connection: Connection<crate::DATABASE>,
+    csrf: &State<CSRF>,
 ) -> (Status, Template) {
     let mut parameters = AuthParameters::new(config, recaptcha);
     parameters.recaptcha_key = recaptcha.get_html_key_as_str().map(|a| a.to_string());
@@ -119,24 +122,19 @@ pub async fn post(
                     return Status::InternalServerError;
                 }
             }
-
-            SessionManager::set(
-                &session,
-                SessionManager::AwaitingConfirmation {
-                    user_id: form.user_id.clone(),
-                },
-            )
+            session.set(SessionToken::AwaitingConfirmation {
+                user_id: form.user_id.clone(),
+                csrf_token: csrf.new_token()
+            })
             .await
             .unwrap();
             return Status::Accepted;
         }
 
-        if let Err(_) = SessionManager::set(
-            &session,
-            SessionManager::LoggedIn {
-                user_id: form.user_id.clone(),
-            },
-        )
+        if let Err(_) = session.set(SessionToken::LoggedIn {
+            user_id: form.user_id.clone(),
+            csrf_token: csrf.new_token(),
+        })
         .await
         {
             return Status::InternalServerError;

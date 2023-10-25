@@ -1,8 +1,8 @@
-use crate::{authentication::SessionManager, users::User};
+use crate::{authentication::{SessionToken, CSRF}, users::User};
 use rocket_db_pools::sqlx;
 use sqlx::Sqlite;
 
-use rocket::http::Status;
+use rocket::{http::Status, State};
 use rocket_session_store::Session;
 
 use super::Page;
@@ -110,8 +110,9 @@ impl super::Page {
 pub async fn get_page_if_allowed(
     connection: &mut sqlx::pool::PoolConnection<Sqlite>,
     page_id: &String,
-    session: &Session<'_, String>,
+    session: &Session<'_, SessionToken>,
     mut required_perms: Vec<Permission>,
+    csrf: &State<CSRF>,
 ) -> Result<Page, Status> {
     let page = Page::get(connection, page_id.to_string())
         .await
@@ -134,7 +135,7 @@ pub async fn get_page_if_allowed(
     }
 
     //Then finally check if the user has it
-    if let SessionManager::LoggedIn { user_id } = SessionManager::get(&session).await {
+    if let SessionToken::LoggedIn { user_id, csrf_token:_ } = SessionToken::init(&session, csrf).await {
         let user = User::get(connection, user_id).await.map_err(|e| {
             log::error!("{e}");
             Status::InternalServerError

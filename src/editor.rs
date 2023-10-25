@@ -1,7 +1,7 @@
 use std::{collections::HashMap, default};
 
-use crate::{authentication::SessionManager, pages, users};
-use rocket::{get, response::Redirect, FromForm};
+use crate::{authentication::{SessionToken, CSRF}, pages, users};
+use rocket::{get, response::Redirect, FromForm, State};
 use rocket_db_pools::Connection;
 use rocket_dyn_templates::{context, Template};
 use rocket_session_store::Session;
@@ -52,22 +52,23 @@ struct EditorParameters<'a> {
 
 #[get("/editor?<page_id>")]
 pub async fn editor(
-    session: Session<'_, String>,
+    session: Session<'_, SessionToken>,
     mut connection: Connection<crate::DATABASE>,
     page_id: Option<&str>,
+    csrf: &State<CSRF>,
 ) -> Result<Template, Redirect> {
     //TEMPORARY FOR TESTS
     /*
-    SessionManager::set(
+    SessionToken::set(
         &session,
-        SessionManager::LoggedIn {
+        SessionToken::LoggedIn {
             user_id: "dayos".into(),
         },
     )
     .await;
     */
     let returnal_error = Redirect::to("/");
-    if let SessionManager::LoggedIn { user_id } = SessionManager::get(&session).await {
+    if let SessionToken::LoggedIn { user_id, csrf_token } = SessionToken::init(&session, csrf).await {
         let user = User::get(&mut *connection, user_id.clone())
             .await
             .map_err(|_| returnal_error)?;

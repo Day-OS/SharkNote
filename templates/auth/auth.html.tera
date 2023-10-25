@@ -71,7 +71,7 @@
   <div id="alert"></div>
   <div 
   hx-trigger="load"
-  hx-get="/auth/components/login_register_forms"
+  hx-get="/auth/components/main_forms"
   id="auth-box">
     {{loaders::default()}}
   </div> 

@@ -6,7 +6,7 @@ use rocket::{
     http::{ContentType, Status},
     post, put,
     tokio::fs,
-    FromForm, delete,
+    FromForm, delete, State,
 };
 use rocket_db_pools::Connection;
 use rocket_dyn_templates::Template;
@@ -21,7 +21,7 @@ use std::{
     str::FromStr,
 };
 
-use crate::editor::Notification;
+use crate::{editor::Notification, authentication::{SessionToken, CSRF}};
 
 use super::permissions;
 use rocket::Data;
@@ -44,13 +44,15 @@ pub async fn get_file(
     mut connection: Connection<crate::DATABASE>,
     page_id: String,
     path: PathBuf,
-    session: Session<'_, String>,
+    csrf: &State<CSRF>,
+    session: Session<'_, SessionToken>,
 ) -> Result<NamedFile, Status> {
     let page = permissions::get_page_if_allowed(
         &mut connection,
         &page_id,
         &session,
         vec![permissions::Permission::SeePrivate],
+        csrf
     )
     .await?;
 
@@ -71,9 +73,10 @@ pub async fn get_file(
 #[put("/editor/file-write", data = "<data>", format = "multipart/form-data")]
 pub async fn write_file(
     mut connection: Connection<crate::DATABASE>,
-    session: Session<'_, String>,
+    session: Session<'_, SessionToken>,
     data: Data<'_>,
     content_type: &ContentType,
+    csrf: &State<CSRF>,
 ) -> Result<Template, Template> {
     async move || -> Result<(), Status> {
         let options = MultipartFormDataOptions::with_multipart_form_data_fields(vec![
@@ -106,6 +109,7 @@ pub async fn write_file(
                 &page_id,
                 &session,
                 vec![permissions::Permission::ModifyContent],
+                csrf
             )
             .await?;
 
@@ -178,8 +182,9 @@ pub async fn write_file(
 #[put("/editor/dir-create", data = "<data>")]
 pub async fn dir_create(
     mut connection: Connection<crate::DATABASE>,
-    session: Session<'_, String>,
+    session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
+    csrf: &State<CSRF>,
 ) -> Result<Template, Template>{
     async move || -> Result<(), Status> {
         if let (Some(directory_name), Some(page_id), Some(path)) = (
@@ -192,6 +197,7 @@ pub async fn dir_create(
                 &page_id,
                 &session,
                 vec![permissions::Permission::ModifyContent],
+                csrf
             )
             .await?;
     
@@ -235,8 +241,9 @@ pub async fn dir_create(
 #[delete("/editor/delete", data = "<data>")]
 pub async fn delete(
     mut connection: Connection<crate::DATABASE>,
-    session: Session<'_, String>,
+    session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
+    csrf: &State<CSRF>,
 ) -> Result<Template, Template>{
     async move || -> Result<String, Status> {
         if let (Some(page_id), Some(path)) = (
@@ -248,6 +255,7 @@ pub async fn delete(
                 &page_id,
                 &session,
                 vec![permissions::Permission::ModifyContent],
+                csrf,
             )
             .await?;
             
@@ -299,8 +307,10 @@ pub async fn delete(
 #[put("/editor/rename", data = "<data>")]
 pub async fn rename(
     mut connection: Connection<crate::DATABASE>,
-    session: Session<'_, String>,
+    session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
+
+    csrf: &State<CSRF>,
 ) -> Result<Template, Template>{
     async move || -> Result<String, Status> {
         if let (Some(page_id), Some(path), Some(new_name)) = (
@@ -313,6 +323,7 @@ pub async fn rename(
                 &page_id,
                 &session,
                 vec![permissions::Permission::ModifyContent],
+                csrf
             )
             .await?;
             

@@ -12,13 +12,13 @@ use rocket_recaptcha_v3::ReCaptcha;
 use rocket_recaptcha_v3::ReCaptchaToken;
 use strfmt::strfmt;
 
-use crate::authentication::Alert;
+use crate::authentication::{Alert, CSRF};
 use crate::users::UserAccountStatus;
 use crate::{configuration, users::User};
 use super::email::{self, Code};
 use super::AuthParameters;
 
-use super::SessionManager;
+use super::SessionToken;
 
 #[derive(FromForm, Debug)]
 pub struct ConfirmationForm {
@@ -48,16 +48,17 @@ pub async fn page(
 
 #[post("/auth/reset-conf", data = "<form>")]
 pub async fn confirmation(
-    session: rocket_session_store::Session<'_, String>,
+    session: rocket_session_store::Session<'_, SessionToken>,
     form: Form<ConfirmationForm>,
     config: &State<configuration::SharkNoteConfig>,
     recaptcha: &State<ReCaptcha>,
+    csrf: &State<CSRF>,
     mut connection: Connection<crate::DATABASE>,
 ) -> Result<Template, Redirect> {
     let mut parameters = AuthParameters::new(config,recaptcha);
-    let session = SessionManager::get(&session).await;
+    let session = SessionToken::init(&session, csrf).await;
 
-    if let SessionManager::AwaitingConfirmation { user_id } = session {
+    if let SessionToken::AwaitingConfirmation {user_id, csrf_token } = session {
         let mut user: User = User::get(&mut connection, user_id).await.unwrap();
         if let Ok(code) = Code::get(&mut connection, &user).await {
             if form.code == code.code.to_string() {
@@ -86,9 +87,11 @@ pub async fn confirmation(
 #[post("/auth/reset", data = "<form>")]
 pub async fn post(
     recaptcha: &State<ReCaptcha>,
-    session: rocket_session_store::Session<'_, String>,
+    session: rocket_session_store::Session<'_, SessionToken>,
     form: Form<ResetForm>,
     config: &State<configuration::SharkNoteConfig>,
+
+    csrf: &State<CSRF>,
     mut connection: Connection<crate::DATABASE>,
 ) -> Result<Template, Redirect> {
     let mut parameters = AuthParameters::new(config,recaptcha);
@@ -122,12 +125,10 @@ pub async fn post(
                 parameters.alert = Some(Alert{ alert_level: crate::authentication::AlertLevel::Error, message: config.messages.account_email_send_error.clone().into() });
                 return Ok(Template::render("auth-panel", parameters));
             }
-            SessionManager::set(
-                &session,
-                SessionManager::AwaitingConfirmation {
-                    user_id: user.user_id.clone(),
-                },
-            )
+            session.set(SessionToken::AwaitingConfirmation {
+                user_id: user.user_id.clone(),
+                csrf_token: csrf.new_token()
+            })
             .await
             .unwrap();
         }

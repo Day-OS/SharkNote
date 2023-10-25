@@ -1,3 +1,4 @@
+use crate::authentication::{SessionToken, CSRF};
 use crate::pages::files;
 use crate::{configuration, pages::permissions};
 use rocket::{form::Form, get, http::Status, post, tokio::fs, State};
@@ -13,9 +14,10 @@ use rocket_session_store::Session;
 #[post("/editor/components/deletion_modal", data = "<data>")]
 pub async fn deletion_modal(
     mut connection: Connection<crate::DATABASE>,
-    session: Session<'_, String>,
+    session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
     config: &State<configuration::SharkNoteConfig>,
+    csrf: &State<CSRF>,
 ) -> Result<Template, Status> {
     if let (Some(page_id), Some(path)) = (data.get("page_id"), data.get("path")) {
         let _page: crate::pages::Page = permissions::get_page_if_allowed(
@@ -23,6 +25,8 @@ pub async fn deletion_modal(
             &page_id,
             &session,
             vec![permissions::Permission::ModifyContent],
+            csrf
+
         )
         .await?;
         let path_name = files::check_path_traversal_attack(PathBuf::from(path.clone()))?
@@ -45,9 +49,10 @@ pub async fn deletion_modal(
 #[post("/editor/components/renaming_modal", data = "<data>")]
 pub async fn renaming_modal(
     mut connection: Connection<crate::DATABASE>,
-    session: Session<'_, String>,
+    session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
     config: &State<configuration::SharkNoteConfig>,
+    csrf: &State<CSRF>,
 ) -> Result<Template, Status> {
     if let (Some(page_id), Some(path),  Some(_type)) = (data.get("page_id"), data.get("path"), data.get("_type")) {
         let _page: crate::pages::Page = permissions::get_page_if_allowed(
@@ -55,6 +60,7 @@ pub async fn renaming_modal(
             &page_id,
             &session,
             vec![permissions::Permission::ModifyContent],
+            csrf
         )
         .await?;
     
@@ -75,9 +81,10 @@ pub async fn renaming_modal(
 #[post("/editor/components/dir_creation_modal", data = "<data>")]
 pub async fn dir_creation_modal(
     mut connection: Connection<crate::DATABASE>,
-    session: Session<'_, String>,
+    session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
     config: &State<configuration::SharkNoteConfig>,
+    csrf: &State<CSRF>,
 ) -> Result<Template, Status> {
     if let (Some(page_id), Some(path)) = (data.get("page_id"), data.get("path")) {
         let _page: crate::pages::Page = permissions::get_page_if_allowed(
@@ -85,6 +92,7 @@ pub async fn dir_creation_modal(
             &page_id,
             &session,
             vec![permissions::Permission::ModifyContent],
+            csrf
         )
         .await?;
         let path_name = files::check_path_traversal_attack(PathBuf::from(path.clone()))?
@@ -107,9 +115,10 @@ pub async fn dir_creation_modal(
 #[post("/editor/components/file_creation_modal", data = "<data>")]
 pub async fn file_creation_modal(
     mut connection: Connection<crate::DATABASE>,
-    session: Session<'_, String>,
+    session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
     config: &State<configuration::SharkNoteConfig>,
+    csrf: &State<CSRF>,
 ) -> Result<Template, Status> {
     if let (Some(page_id), Some(path)) = (data.get("page_id"), data.get("path")) {
         let _page: crate::pages::Page = permissions::get_page_if_allowed(
@@ -117,6 +126,7 @@ pub async fn file_creation_modal(
             &page_id,
             &session,
             vec![permissions::Permission::ModifyContent],
+            csrf
         )
         .await?;
         let path_name = files::check_path_traversal_attack(PathBuf::from(path.clone()))?
@@ -145,14 +155,16 @@ pub async fn explorer(
     mut connection: Connection<crate::DATABASE>,
     page_id: String,
     path: String,
-    session: Session<'_, String>,
+    session: Session<'_, SessionToken>,
     config: &State<configuration::SharkNoteConfig>,
+    csrf: &State<CSRF>,
 ) -> Result<Template, Status> {
     let _page = permissions::get_page_if_allowed(
         &mut connection,
         &page_id,
         &session,
         vec![permissions::Permission::ModifyContent],
+        csrf
     )
     .await?;
 

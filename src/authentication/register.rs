@@ -3,6 +3,7 @@ use super::check_recaptcha_token;
 use super::email;
 use super::AuthParameters;
 use super::email::Code;
+use crate::authentication::CSRF;
 use crate::users::invite;
 use crate::users::UserAccountStatus;
 use crate::{configuration, users::User};
@@ -17,7 +18,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use strfmt::strfmt;
 
-use super::SessionManager;
+use super::SessionToken;
 
 #[derive(FromForm, Debug)]
 pub(crate) struct ConfirmationForm {
@@ -57,15 +58,16 @@ pub async fn check(
 #[post("/auth/register-conf", data = "<form>")]
 pub async fn confirmation(
     recaptcha: &State<ReCaptcha>,
-    session: rocket_session_store::Session<'_, String>,
+    session: rocket_session_store::Session<'_, SessionToken>,
     form: Form<ConfirmationForm>,
     config: &State<configuration::SharkNoteConfig>,
     mut connection: Connection<crate::DATABASE>,
+    csrf: &State<CSRF>,
 ) -> Result<Template, Redirect> {
     let mut parameters = AuthParameters::new(config, recaptcha);
-    let session = SessionManager::get(&session).await;
+    let session = SessionToken::init(&session, csrf).await;
 
-    if let SessionManager::AwaitingConfirmation { user_id } = session {
+    if let SessionToken::AwaitingConfirmation { user_id, csrf_token } = session {
         let user: User = User::get(&mut connection, user_id).await.unwrap();
         if let Ok(code) = Code::get(&mut connection, &user).await {
             if form.code == code.code.to_string() {
@@ -91,10 +93,11 @@ pub async fn confirmation(
 #[post("/auth/register", data = "<form>")]
 pub async fn post(
     recaptcha: &State<ReCaptcha>,
-    session: rocket_session_store::Session<'_, String>,
+    session: rocket_session_store::Session<'_, SessionToken>,
     form: Form<RegistrationForm>,
     config: &State<configuration::SharkNoteConfig>,
     mut connection: Connection<crate::DATABASE>,
+    csrf: &State<CSRF>,
 ) -> Result<Template, Redirect> {
     let mut parameters = AuthParameters::new(config,recaptcha);
     parameters.recaptcha_key = recaptcha.get_html_key_as_str().map(|a| a.to_string());
@@ -158,12 +161,10 @@ pub async fn post(
             parameters.alert = Some(Alert { alert_level: crate::authentication::AlertLevel::Error, message: config.messages.account_email_send_error.clone().into() });
             return Ok(Template::render("auth-panel", parameters));
         }
-        SessionManager::set(
-            &session,
-            SessionManager::AwaitingConfirmation {
-                user_id: form.user_id.clone(),
-            },
-        )
+        session.set(SessionToken::AwaitingConfirmation {
+            user_id: form.user_id.clone(),
+            csrf_token: csrf.new_token()
+        })
         .await
         .unwrap();
     }

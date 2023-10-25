@@ -49,6 +49,8 @@ use rocket::{
     Request,
 };
 
+use crate::authentication::{SessionToken, CSRF};
+
 /*
 pub struct RequestHeaders<'h>(pub &'h HeaderMap<'h>);
 
@@ -66,7 +68,7 @@ impl<'r> FromRequest<'r> for RequestHeaders<'r> {
 #[derive(Database)]
 #[database("sqlite_logs")]
 pub struct DATABASE(pub sqlx::SqlitePool);
-pub struct CSRF(pub AesGcmCsrfProtection);
+
 
 pub fn none(
     value: Option<&Value>,
@@ -163,7 +165,7 @@ fn rocket() -> _ {
     //_ = std::fs::remove_dir_all("/home/ubuntu/DEV/daytheipc-com/data/page_debug/");
     //^^^
 
-    let store: SessionStore<String> = SessionStore {
+    let store: SessionStore<SessionToken> = SessionStore {
         store: Box::new(MemoryStore::default()),
         name: "token".into(),
         duration: Duration::from_secs(3600 * 24 * 3),
@@ -221,7 +223,7 @@ fn rocket() -> _ {
                 editor::components::renaming_modal,
                 authentication::base,
                 authentication::logout::logout,
-                authentication::components::login_register_forms,
+                authentication::main_forms::login_register_forms,
                 authentication::password_reset::page,
                 authentication::password_reset::post,
                 authentication::password_reset::confirmation,
