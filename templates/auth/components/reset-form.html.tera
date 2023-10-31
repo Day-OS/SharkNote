@@ -1,0 +1,19 @@
+<div class="auth-box">
+  <div class="content">
+    <div class="" id="register-tab-pane" role="tabpanel" aria-labelledby="register-tab" tabindex="0">
+      <form 
+        hx-target="#auth-box"
+        hx-target-202="#auth-box"
+        hx-target-*="#alert"
+        hx-post="/auth/reset"
+        hx-include="#recaptcha_token, #csrf_token">
+        Please enter the email address you used to create your account. If the email address exists, we will send you an email.
+        <div class="form-floating">
+          <input type="email" class="form-control" id="email_reg" name="email" placeholder="name@example.com" required>
+          <label for="email_reg">Email address</label>
+        </div>
+        <button class="btn btn-primary w-100 py-2 mt-2" type="submit">Send reset code</button>
+      </form>
+    </div>
+  </div>
+</div>

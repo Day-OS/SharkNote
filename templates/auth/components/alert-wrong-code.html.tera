@@ -1,0 +1,5 @@
+{% import "auth/macros" as macros %}
+
+<div class="alert alert-danger" role="alert">
+    ⚠️ {{macros::bubble(image="/static/blobhaj/Blobhaj_Thinking.svg", text=messages.confirmation_code_error)}}
+</div>

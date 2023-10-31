@@ -5,6 +5,8 @@
 //#[path ="database_handlers/pages.rs"]
 //mod content;
 //mod language_file;
+#![allow(private_interfaces)]
+#![allow(renamed_and_removed_lints)]
 #![feature(async_closure)]
 mod authentication;
 mod catchers;
@@ -12,19 +14,15 @@ mod configuration;
 mod editor;
 pub mod pages;
 pub mod users;
-
-use csrf::AesGcmCsrfProtection;
-use log::warn;
 use pages::permissions::Permission;
-use rocket::config::{LogLevel, SecretKey};
+use rocket::config::LogLevel;
 use rocket::fairing::{self, AdHoc};
 use rocket::figment::providers::{Env, Format, Serialized, Toml};
 use rocket::fs::NamedFile;
 use rocket::http::Status;
-use rocket::response::status::NotFound;
+use rocket::response::Redirect;
 use rocket::serde::json::to_value;
-use rocket::serde::ser::StdError;
-use rocket::{catchers, get, Build, Rocket};
+use rocket::{catchers, get, Build, Rocket, uri};
 use rocket::{launch, routes};
 use rocket_dyn_templates::Template;
 use rocket_session_store::{self, memory::MemoryStore, CookieConfig, SessionStore};
@@ -39,17 +37,8 @@ use std::time::Duration;
 use users::{User, UserAccountStatus};
 
 //use users::user::{ User, self};
+use crate::authentication::SessionToken;
 use rocket_db_pools::{sqlx, Database};
-use std::convert::Infallible;
-
-use rocket::{
-    http::HeaderMap,
-    outcome::Outcome,
-    request::{self, FromRequest},
-    Request,
-};
-
-use crate::authentication::{SessionToken, CSRF};
 
 /*
 pub struct RequestHeaders<'h>(pub &'h HeaderMap<'h>);
@@ -68,7 +57,6 @@ impl<'r> FromRequest<'r> for RequestHeaders<'r> {
 #[derive(Database)]
 #[database("sqlite_logs")]
 pub struct DATABASE(pub sqlx::SqlitePool);
-
 
 pub fn none(
     value: Option<&Value>,
@@ -107,24 +95,29 @@ async fn database_startup(rocket: Rocket<Build>) -> fairing::Result {
             .unwrap();
         let connection = &mut db.0.acquire().await.unwrap();
 
+        /*
         let user = User::new(
             connection,
             "dayos".to_owned(),
-            "1234".to_owned(),
+            "12345678a".to_owned(),
             "daniela.paladinof@gmail.com".to_owned(),
             UserAccountStatus::Normal,
         )
         .await
         .unwrap();
+        user.set_additional_protection(connection, true).await.unwrap();
+        */
         let page = pages::Page::new(connection, "page_debug".to_string(), None)
             .await
             .unwrap();
+        /*
         page.set_permission(connection, &user, Permission::ModifyContent)
             .await
             .unwrap();
         page.set_permission(connection, &user, Permission::SeePrivate)
             .await
             .unwrap();
+         */
         Ok(rocket)
     } else {
         Err(rocket)
@@ -137,7 +130,6 @@ fn rocket() -> _ {
         engines.tera.register_tester("none", none);
         engines.tera.register_filter("extension", extension);
         engines.tera.register_filter("content_name", content_name);
-        
     });
     if let Err(e) = std::process::Command::new("git")
         .args(["submodule", "update", "--init", "--recursive"])
@@ -184,24 +176,14 @@ fn rocket() -> _ {
         .merge(Toml::file("configuration.toml").nested())
         .merge(("log_level", LogLevel::Critical));
 
-
-    let mut secret: [u8; 32] = [0; 32];
-    secret.copy_from_slice(
-        figment.find_value("secret_key")
-        .unwrap()
-        .as_str()
-        .unwrap()
-        .as_bytes().split_at(32).0
-    );
-    warn!("{secret:?}");
-
     rocket::custom(figment)
         .register(
             "/",
             catchers![
                 catchers::not_found,
                 catchers::not_authorized,
-                catchers::internal_error
+                catchers::internal_error,
+                catchers::forbidden,
             ],
         )
         //built in no tworking
@@ -222,26 +204,31 @@ fn rocket() -> _ {
                 editor::components::deletion_modal,
                 editor::components::renaming_modal,
                 authentication::base,
-                authentication::logout::logout,
-                authentication::main_forms::login_register_forms,
+                authentication::logout::component,
+                authentication::main_forms::component,
                 authentication::password_reset::page,
                 authentication::password_reset::post,
                 authentication::password_reset::confirmation,
+                authentication::password_reset::component,
                 authentication::login::post,
                 authentication::login::confirmation,
                 authentication::register::post,
                 authentication::register::confirmation,
                 authentication::register::check,
                 editor::editor,
+                index,
             ],
         )
+        .attach(rocket_csrf_token::Fairing::new(
+            rocket_csrf_token::CsrfConfig::default()
+        ))
         .attach(AdHoc::config::<configuration::SharkNoteConfig>())
         .attach(DATABASE::init())
         .attach(rocket_recaptcha_v3::ReCaptcha::fairing())
         .attach(AdHoc::try_on_ignite("Database Startup", database_startup))
         .attach(store.fairing())
         .attach(tera)
-        .manage(CSRF(AesGcmCsrfProtection::from_key(secret)))
+        
 }
 
 //.manage(authentication::AuthBuffer::new())
@@ -253,4 +240,10 @@ pub async fn get_file(path: PathBuf) -> Result<NamedFile, Status> {
     NamedFile::open(_path)
         .await
         .map_err(|_: std::io::Error| Status::NotFound)
+}
+
+
+#[get("/")]
+pub async fn index() -> Redirect{
+    Redirect::to(uri!(authentication::base))
 }

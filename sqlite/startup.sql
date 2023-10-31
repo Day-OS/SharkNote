@@ -1,11 +1,13 @@
 CREATE TABLE IF NOT EXISTS  user (
     user_id TEXT PRIMARY KEY UNIQUE,
     password TEXT NOT NULL,
+    salt TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     display_name TEXT UNIQUE,
     configuration_json TEXT, /*CONTAINS DESCRIPTION, PRONOUNS, PROFILE PICTURE AND OTHER LESS SERIOUS STUFF*/
     is_program_admin INTEGER NOT NULL,
-    account_status TEXT NOT NULL
+    account_status TEXT NOT NULL,
+    additional_protection INTEGER NOT NULL /*Boolean*/
 );
 
 CREATE TABLE IF NOT EXISTS user_invited(

@@ -9,6 +9,10 @@ pub fn not_found() -> Template {
 pub fn not_authorized() -> Template {
     Template::render("error/not_authorized", context! {})
 }
+#[catch(403)]
+pub fn forbidden() -> Template {
+    Template::render("error/not_authorized", context! {})
+}
 #[catch(500)]
 pub fn internal_error() -> Template {
     Template::render("error/internal_error", context! {})

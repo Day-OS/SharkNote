@@ -61,7 +61,20 @@ pub async fn send_login_code(
     config: &configuration::SharkNoteConfig,
     user: &User) -> Result<(), String>{
     _send_code(connection, config, user, &config.messages.email_login_title, &config.messages.email_login_text).await
+}
 
+pub async fn send_reset_code(
+    connection: &mut sqlx::SqliteConnection,
+    config: &configuration::SharkNoteConfig,
+    user: &User) -> Result<(), String>{
+    _send_code(connection, config, user, &config.messages.email_reset_title, &config.messages.email_reset_text).await
+
+}
+pub async fn send_register_code(
+    connection: &mut sqlx::SqliteConnection,
+    config: &configuration::SharkNoteConfig,
+    user: &User) -> Result<(), String>{
+    _send_code(connection, config, user, &config.messages.email_registration_title, &config.messages.email_registration_text).await
 }
 
 
@@ -77,8 +90,9 @@ impl Code {
         user: &User,
     ) -> Result<u32, sqlx::Error> {
         let code: u32 = rand::thread_rng().gen_range(0..999999);
+        //Removes the last code and inserts a new
         let _ = sqlx::query_as::<_, Code>(
-            "INSERT INTO user_code (user_id, code) VALUES (?1, ?2) RETURNING *;",
+            "DELETE FROM user_code WHERE user_id = ?1; INSERT INTO user_code (user_id, code) VALUES (?1, ?2) RETURNING *;",
         )
         .bind(user.user_id.clone())
         .bind(code)

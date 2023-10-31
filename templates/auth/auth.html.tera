@@ -4,6 +4,8 @@
     <link rel="stylesheet" href="static/3rdparty/bootstrap-icons/font/bootstrap-icons.css">
     <script src="/static/3rdparty/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/static/3rdparty/htmx/dist/htmx.min.js"></script>
+    <script src="/static/3rdparty/htmx/dist/ext/response-targets.js" defer></script>
+    <script src="/static/3rdparty/hyperscript/dist/_hyperscript.min.js"></script>
     <style type="text/css" media="print">
       @page {
           size: auto;   /* auto is the initial value */
@@ -66,14 +68,32 @@
 
 {% block body %}
 
-<main class="form-signin w-100 m-auto">
+<main class="form-signin w-100 m-auto dflex-shrink-1 overflow-auto" hx-ext="response-targets">
+  <input id="recaptcha_token" name="recaptcha_token" type="hidden" value="">
+  <input id="csrf_token" name="csrf_token" type="hidden" value="{{csrf_token}}">
   <img class="mb-4" src="/static/logo.svg" alt="" width="400px" height="100">
   <div id="alert"></div>
-  <div 
+  <div
+  _="
+  on every htmx:afterRequest
+    tell <input, button/>
+      remove [@disabled=true] 
+  end
+  on every htmx:beforeSend
+    tell <input, button/>
+      toggle [@disabled=true]
+  end
+  on every htmx:beforeSend
+    set (#alert).innerHTML to ''
+  end
+  "
   hx-trigger="load"
-  hx-get="/auth/components/main_forms"
+  hx-post="/auth/components/main_forms"
+  hx-include="#csrf_token"
   id="auth-box">
-    {{loaders::default()}}
+    <div class="auth-box">
+      {{loaders::default()}}
+    </div>
   </div> 
 </main>
 

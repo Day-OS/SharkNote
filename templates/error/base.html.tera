@@ -23,5 +23,6 @@
   <div class="row justify-content-center">
     <h4 class="text-center">{{subtitle_content | default(value="DefaultSubTitle")}}</h4>
   </div>
+  <a class="btn btn-primary w-100" href="/">Return to main page</a>
 </div>
 {% endblock body %}

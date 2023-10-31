@@ -8,6 +8,7 @@ use rocket::{
     tokio::fs,
     FromForm, delete, State,
 };
+use rocket_csrf_token::CsrfToken;
 use rocket_db_pools::Connection;
 use rocket_dyn_templates::Template;
 use rocket_multipart_form_data::{
@@ -21,7 +22,7 @@ use std::{
     str::FromStr,
 };
 
-use crate::{editor::Notification, authentication::{SessionToken, CSRF}};
+use crate::{editor::Notification, authentication::SessionToken};
 
 use super::permissions;
 use rocket::Data;
@@ -44,7 +45,7 @@ pub async fn get_file(
     mut connection: Connection<crate::DATABASE>,
     page_id: String,
     path: PathBuf,
-    csrf: &State<CSRF>,
+    csrf: CsrfToken,
     session: Session<'_, SessionToken>,
 ) -> Result<NamedFile, Status> {
     let page = permissions::get_page_if_allowed(
@@ -76,7 +77,7 @@ pub async fn write_file(
     session: Session<'_, SessionToken>,
     data: Data<'_>,
     content_type: &ContentType,
-    csrf: &State<CSRF>,
+    csrf: CsrfToken,
 ) -> Result<Template, Template> {
     async move || -> Result<(), Status> {
         let options = MultipartFormDataOptions::with_multipart_form_data_fields(vec![
@@ -184,7 +185,7 @@ pub async fn dir_create(
     mut connection: Connection<crate::DATABASE>,
     session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
-    csrf: &State<CSRF>,
+    csrf: CsrfToken,
 ) -> Result<Template, Template>{
     async move || -> Result<(), Status> {
         if let (Some(directory_name), Some(page_id), Some(path)) = (
@@ -243,7 +244,7 @@ pub async fn delete(
     mut connection: Connection<crate::DATABASE>,
     session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
-    csrf: &State<CSRF>,
+    csrf: CsrfToken,
 ) -> Result<Template, Template>{
     async move || -> Result<String, Status> {
         if let (Some(page_id), Some(path)) = (
@@ -310,7 +311,7 @@ pub async fn rename(
     session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
 
-    csrf: &State<CSRF>,
+    csrf: CsrfToken,
 ) -> Result<Template, Template>{
     async move || -> Result<String, Status> {
         if let (Some(page_id), Some(path), Some(new_name)) = (

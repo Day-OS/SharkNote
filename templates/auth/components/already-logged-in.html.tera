@@ -5,8 +5,9 @@
   <div class="content" id="maintabs">
     {{macros::bubble(image="/static/blobhaj/Blobhaj_Thinking.svg", text=messages.already_logged_in_prompt)}}
     <input
+    hx-include="#recaptcha_token, #csrf_token"
     hx-target="#auth-box"
-    hx-get="/auth/logout"
+    hx-post="/auth/logout"
     class="btn btn-primary w-100" type="button" value="Logout">
   </div>
 </div>

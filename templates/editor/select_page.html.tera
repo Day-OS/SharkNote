@@ -19,7 +19,7 @@
 
 <div id="teste">
   <button 
-  hx-get="/auth/components/login_register_forms"
+  hx-post="/auth/components/main_forms"
   hx-target="#teste"
   hx-trigger="click"
   >DEBUG!!!!!!</button>

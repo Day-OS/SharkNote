@@ -1,7 +1,8 @@
-use crate::authentication::{SessionToken, CSRF};
+use crate::authentication::SessionToken;
 use crate::pages::files;
 use crate::{configuration, pages::permissions};
 use rocket::{form::Form, get, http::Status, post, tokio::fs, State};
+use rocket_csrf_token::CsrfToken;
 use rocket_db_pools::Connection;
 use rocket_dyn_templates::{context, Template};
 use serde::{Serialize, Deserialize};
@@ -17,7 +18,7 @@ pub async fn deletion_modal(
     session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
     config: &State<configuration::SharkNoteConfig>,
-    csrf: &State<CSRF>,
+    csrf: CsrfToken,
 ) -> Result<Template, Status> {
     if let (Some(page_id), Some(path)) = (data.get("page_id"), data.get("path")) {
         let _page: crate::pages::Page = permissions::get_page_if_allowed(
@@ -52,7 +53,7 @@ pub async fn renaming_modal(
     session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
     config: &State<configuration::SharkNoteConfig>,
-    csrf: &State<CSRF>,
+    csrf: CsrfToken,
 ) -> Result<Template, Status> {
     if let (Some(page_id), Some(path),  Some(_type)) = (data.get("page_id"), data.get("path"), data.get("_type")) {
         let _page: crate::pages::Page = permissions::get_page_if_allowed(
@@ -84,7 +85,7 @@ pub async fn dir_creation_modal(
     session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
     config: &State<configuration::SharkNoteConfig>,
-    csrf: &State<CSRF>,
+    csrf: CsrfToken,
 ) -> Result<Template, Status> {
     if let (Some(page_id), Some(path)) = (data.get("page_id"), data.get("path")) {
         let _page: crate::pages::Page = permissions::get_page_if_allowed(
@@ -118,7 +119,7 @@ pub async fn file_creation_modal(
     session: Session<'_, SessionToken>,
     data: Form<HashMap<String, String>>,
     config: &State<configuration::SharkNoteConfig>,
-    csrf: &State<CSRF>,
+    csrf: CsrfToken,
 ) -> Result<Template, Status> {
     if let (Some(page_id), Some(path)) = (data.get("page_id"), data.get("path")) {
         let _page: crate::pages::Page = permissions::get_page_if_allowed(
@@ -157,7 +158,7 @@ pub async fn explorer(
     path: String,
     session: Session<'_, SessionToken>,
     config: &State<configuration::SharkNoteConfig>,
-    csrf: &State<CSRF>,
+    csrf: CsrfToken,
 ) -> Result<Template, Status> {
     let _page = permissions::get_page_if_allowed(
         &mut connection,

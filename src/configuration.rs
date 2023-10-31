@@ -61,7 +61,7 @@ impl Default for SharkNoteConfig {
             messages: Messages {
                 internal_error: "Ooops, someone slipped in the cables".into(),
                 already_logged_in_prompt:"You are already logged in. Do you wish to logout?".into(),
-                not_invited: "You were not invited. Ask someone for permission to join {display_program_name}.".to_string(),
+                not_invited: "You were not invited. Ask someone for permission to join us.".to_string(),
                 account_login_link: "Click Here to go to the editor".to_string(),
                 account_login_success: "Welcome back! You have successfully logged in.".to_owned(),
                 account_login_error: "The provided password is wrong or the account does not exist".to_owned(),

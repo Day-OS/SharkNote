@@ -1,15 +1,13 @@
 use log::error;
 
-use log::info;
+use crate::{configuration, users::User};
 use rocket::http::Status;
-use rocket::{form::Form, post, response::Redirect, FromForm, State};
+use rocket::{form::Form, post, FromForm, State};
+use rocket_csrf_token::CsrfToken;
 use rocket_db_pools::Connection;
 use rocket_dyn_templates::Template;
 use rocket_recaptcha_v3::ReCaptcha;
 use rocket_recaptcha_v3::ReCaptchaToken;
-
-use crate::authentication::CSRF;
-use crate::{configuration, users::User};
 
 use super::check_recaptcha_token;
 use super::email;
@@ -21,51 +19,82 @@ use super::SessionToken;
 #[derive(FromForm, Debug)]
 pub(crate) struct ConfirmationForm {
     code: String,
-}
-
-#[derive(FromForm, Debug)]
-pub(crate) struct LoginForm {
-    user_id: String,
-    password: String,
+    csrf_token: String,
     recaptcha_token: Option<ReCaptchaToken>,
 }
 
-#[post("/auth/login-conf", data = "<form>")]
+#[post("/auth/login/confirmation", data = "<form>")]
 pub async fn confirmation(
     session: rocket_session_store::Session<'_, SessionToken>,
     recaptcha: &State<ReCaptcha>,
     form: Form<ConfirmationForm>,
     config: &State<configuration::SharkNoteConfig>,
     mut connection: Connection<crate::DATABASE>,
-    csrf: &State<CSRF>,
-) -> Result<Template, Redirect> {
-    todo!();
-    let mut parameters = AuthParameters::new(config, recaptcha);
-    let session = SessionToken::init(&session, csrf).await;
+    csrf: CsrfToken,
+) -> (Status, Template) {
+    let parameters = AuthParameters::new(config);
 
-    if let SessionToken::AwaitingConfirmation { user_id , csrf_token:_} = session {
-        let user: User = User::get(&mut connection, user_id).await.unwrap();
-        if let Ok(code) = Code::get(&mut connection, &user).await {
-            if form.code == code.code.to_string() {
-                parameters.alert = Some(super::Alert {
-                    alert_level: super::AlertLevel::Success,
-                    message: config.messages.account_login_success.clone(),
-                });
-                parameters.final_button = Some(super::FinalButton {
-                    href: "/editor".into(),
-                    text: config.messages.account_login_link.clone(),
-                });
-                return Ok(Template::render("auth/base", parameters));
+    let code = async move || -> Status {
+        if let Err(st) = super::check_csrf(&form.csrf_token, &csrf) {
+            return st;
+        };
+        if let Err(st) = check_recaptcha_token(config, recaptcha, &form.recaptcha_token).await {
+            return st;
+        };
+        if let SessionToken::AwaitingConfirmation { user_id } = SessionToken::init(&session).await {
+            let user: User = User::get(&mut connection, user_id.clone()).await.unwrap();
+            if let Ok(code) = Code::get(&mut connection, &user).await {
+                if form.code == code.code.to_string() {
+                    if let Err(e) = session
+                        .set(SessionToken::LoggedIn {
+                            user_id: user_id.clone(),
+                        })
+                        .await
+                    {
+                        error!("{e}");
+                        return Status::InternalServerError;
+                    }
+                    if let Err(_) = Code::delete(code, &mut connection).await{ return Status::InternalServerError;}
+                    return Status::Ok;
+                }
+                else{return Status::Forbidden}
             }
+            return Status::InternalServerError
         }
-        parameters.alert = Some(super::Alert {
-            alert_level: super::AlertLevel::Error,
-            message: config.messages.confirmation_code_error.clone(),
-        });
-        return Ok(Template::render("auth-conf", parameters));
+        Status::InternalServerError
+    }()
+    .await;
+
+    match code {
+        //User Logged in successfully and can access his account.
+        Status { code: 200 } => {
+            return (
+                Status::Ok,
+                Template::render("auth/components/login-success", parameters),
+            );
+        }
+        //Wrong code
+        Status { code: 403 } => {
+            return (
+                Status::Forbidden,
+                Template::render("auth/components/alert-wrong-code", parameters),
+            );
+        }
+        Status { code: 500 } | _ => {
+            return (
+                Status::InternalServerError,
+                Template::render("auth/components/alert-internal-error", parameters),
+            );
+        }
     }
-    //In case the user entered this page as a mistake.
-    return Err(Redirect::to("/auth"));
+}
+
+#[derive(FromForm, Debug)]
+pub(crate) struct LoginForm {
+    user_id: String,
+    password: String,
+    csrf_token: String,
+    recaptcha_token: Option<ReCaptchaToken>,
 }
 
 #[post("/auth/login", data = "<form>")]
@@ -75,19 +104,20 @@ pub async fn post(
     form: Form<LoginForm>,
     config: &State<configuration::SharkNoteConfig>,
     mut connection: Connection<crate::DATABASE>,
-    csrf: &State<CSRF>,
+    csrf: CsrfToken,
 ) -> (Status, Template) {
-    let mut parameters = AuthParameters::new(config, recaptcha);
-    parameters.recaptcha_key = recaptcha.get_html_key_as_str().map(|a| a.to_string());
+    let parameters = AuthParameters::new(config);
 
     let code = async move || -> Status {
-        if let Err(_) = check_recaptcha_token(config, recaptcha, form.recaptcha_token.clone()).await
-        {
-            return Status::Forbidden;
+        if let Err(st) = super::check_csrf(&form.csrf_token, &csrf) {
+            return st;
         };
-
-        //Had to use two matches because the compiler was drunk and wouldn't help. It was giving me an error that the parameter variable was moved inside the map_err closure. It shouldn't happen because I was using the ? macro. I'm actually pissed off by this...
-        let user = match match User::check_login_credentials(
+        if let Err(st) = check_recaptcha_token(config, recaptcha, &form.recaptcha_token).await {
+            return st;
+        };
+        
+        // This code checks the user's login credentials and returns a user if the credentials are correct.
+        let user: User = match match User::check_login_credentials(
             &mut *connection,
             form.user_id.clone(),
             form.password.clone(),
@@ -101,8 +131,7 @@ pub async fn post(
                     Err(())
                 }
             }
-            Err(e) => {
-                info!("{e} | In a login attempt.");
+            Err(_) => {
                 Err(())
             }
         } {
@@ -113,7 +142,7 @@ pub async fn post(
         };
 
         // IF SMTP Server is enabled
-        if config.smtp.is_some() {
+        if config.smtp.is_some() && user.additional_protection {
             //same thing happened here, had to use a useless match when I would normally just use a map_err...
             match email::send_login_code(&mut *connection, &config, &user).await {
                 Ok(_) => (),
@@ -122,21 +151,22 @@ pub async fn post(
                     return Status::InternalServerError;
                 }
             }
-            session.set(SessionToken::AwaitingConfirmation {
-                user_id: form.user_id.clone(),
-                csrf_token: csrf.new_token()
-            })
-            .await
-            .unwrap();
+            session
+                .set(SessionToken::AwaitingConfirmation {
+                    user_id: form.user_id.clone(),
+                })
+                .await
+                .unwrap();
             return Status::Accepted;
         }
 
-        if let Err(_) = session.set(SessionToken::LoggedIn {
-            user_id: form.user_id.clone(),
-            csrf_token: csrf.new_token(),
-        })
-        .await
+        if let Err(e) = session
+            .set(SessionToken::LoggedIn {
+                user_id: form.user_id.clone(),
+            })
+            .await
         {
+            error!("{e}");
             return Status::InternalServerError;
         };
         Status::Ok
@@ -162,13 +192,13 @@ pub async fn post(
         Status { code: 403 } => {
             return (
                 Status::Forbidden,
-                Template::render("auth/components/login-register-forms", parameters),
+                Template::render("auth/components/alert-wrong-password", parameters),
             );
         }
         Status { code: 500 } | _ => {
             return (
                 Status::InternalServerError,
-                Template::render("auth/components/login-register-forms", parameters),
+                Template::render("auth/components/alert-internal-error", parameters),
             );
         }
     }

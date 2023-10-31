@@ -11,13 +11,11 @@
   <div class="tab-content content" id="maintabs">
     <div class="tab-pane fade show active" id="login-tab-pane" role="tabpanel" aria-labelledby="login-tab" tabindex="0">
       <form 
-      hx-target="#auth-box"
-      hx-target-403="#alert"
-      hx-target-500="#alert"
-      hx-post="/auth/login">
-        {%if recaptcha_key %}
-          <input id="recaptcha_token" name="recaptcha_token" type="hidden" value="">
-        {%endif%}
+        hx-target="#auth-box"
+        hx-target-403="#alert"
+        hx-target-500="#alert"
+        hx-include="#recaptcha_token, #csrf_token"
+        hx-post="/auth/login">
         <div class="form-floating">
           <input type="text" class="form-control rounded-bottom-0" id="user_id_login" placeholder="" name="user_id" required>
           <label for="user_id_login">User Id</label>
@@ -28,16 +26,24 @@
         </div>
         
         <button class="btn btn-primary w-100 py-2 mt-3" type="submit">Sign in</button>
-        <a href="/auth/reset">Change Password</a>
+        <a 
+        href="#"
+        hx-target="#auth-box"
+        hx-target-403="#alert"
+        hx-target-500="#alert"
+        hx-include="#recaptcha_token, #csrf_token"
+        hx-post="/auth/components/reset">
+          Change Password
+        </a>
       </form>
     </div>
     <div class="tab-pane fade" id="register-tab-pane" role="tabpanel" aria-labelledby="register-tab" tabindex="0">
       <form 
       hx-target="#auth-box"
-      hx-post="/auth/register" id="register_form">
-        {%if recaptcha_key %}
-          <input id="recaptcha_token" name="recaptcha_token" type="hidden" value="" required>
-        {%endif%}
+      hx-target-403="#alert"
+      hx-target-500="#alert"
+      hx-include="#recaptcha_token, #csrf_token"
+      hx-post="/auth/register">
         <div class="form-floating  input-group ">
           <input type="text" class="form-control rounded-top-2 rounded-bottom-0" id="user_id_reg" placeholder="" name="user_id" required>
           <label for="user_id_reg">User ID</label>

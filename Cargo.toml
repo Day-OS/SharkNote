@@ -24,7 +24,8 @@ toml = "0.8.4"
 strfmt = "0.2.4"
 rand = "0.8.5"
 rocket-multipart-form-data = "0.10.6"
-csrf = "0.4.1"
+rocket_csrf_token = "0.3.1"
+regex = "1.10.2"
 
 
 [dependencies.sqlx]

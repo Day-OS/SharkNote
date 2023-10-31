@@ -10,3 +10,6 @@
 [submodule "htmx"]
 	path = static/3rdparty/htmx
 	url = https://github.com/bigskysoftware/htmx.git
+[submodule "static/3rdparty/hyperscript"]
+	path = static/3rdparty/hyperscript
+	url = https://github.com/bigskysoftware/_hyperscript.git
